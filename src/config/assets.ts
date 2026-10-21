@@ -1,0 +1,231 @@
+/**
+ * Centralized media assets configuration mapping existing real files in public/assets
+ * 9 Images + 4 Videos
+ */
+
+export interface MediaAsset {
+  id: string;
+  type: 'image' | 'video';
+  src: string;
+  title: string;
+  description: string;
+  category: 'logo' | 'menu' | 'package' | 'wedding' | 'live-service' | 'qr';
+  tags: string[];
+  aspectRatio?: string;
+}
+
+export const MEDIA_ASSETS: {
+  logo: string;
+  heroBg: string;
+  heroBiryaniCard: string;
+  images: MediaAsset[];
+  videos: MediaAsset[];
+} = {
+  logo: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.05 PM.jpeg',
+  heroBg: '/assets/images/hero-catering-bg.jpg',
+  heroBiryaniCard: '/assets/images/hero-biryani-feast.jpg',
+  images: [
+    {
+      id: 'img-logo',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.05 PM.jpeg',
+      title: 'Sri Caterers Official Emblem & Brand Logo',
+      description: 'The Event Management Company - Chennai. Authentic Tamil Nadu Catering.',
+      category: 'logo',
+      tags: ['Brand', 'Logo', 'Emblem', 'Chennai'],
+      aspectRatio: '1/1',
+    },
+    {
+      id: 'img-menu-card',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.05 PM (1).jpeg',
+      title: 'Traditional 4-Tier Catering Menu Card',
+      description: 'Authentic South Indian Breakfast, Lunch, Dinner & Evening Snack meal sets with traditional per-leaf rates.',
+      category: 'menu',
+      tags: ['Menu Card', 'Banana Leaf Meals', 'Breakfast', 'Dinner', 'Traditional Veg'],
+      aspectRatio: '3/4',
+    },
+    {
+      id: 'img-mutton-biryani-pkg',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.06 PM.jpeg',
+      title: 'Authentic Mutton Biryani Menu Package (₹269/-)',
+      description: 'Banana leaf presentation with Mutton Biryani, Bread Halwa, Onion Raitha, Brinjal Curry & Chicken 65 add-on.',
+      category: 'package',
+      tags: ['Mutton Biryani', 'Halal', 'Banana Leaf', 'Non-Veg', 'Special Package'],
+      aspectRatio: '2/3',
+    },
+    {
+      id: 'img-chicken-biryani-pkg',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.39 PM.jpeg',
+      title: 'Chicken Biryani Menu Package (₹149/-)',
+      description: 'Traditional Tamil Dum Biryani feast served on banana leaf with Bread Halwa, Onion Raitha, and Brinjal Curry.',
+      category: 'package',
+      tags: ['Chicken Biryani', 'Affordable Feast', 'Banana Leaf', 'Raitha', 'Chennai Special'],
+      aspectRatio: '2/3',
+    },
+    {
+      id: 'img-wedding-175k-pkg',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-07 at 9.30.46 PM.jpeg',
+      title: 'Grand Wedding Royal Complete Package (₹1,75,000/-)',
+      description: 'Complete celebration package: Live Stalls, Authentic Wood Fire Mutton Biryani, and Royal Vegetarian Feast. 100% Halal certified.',
+      category: 'wedding',
+      tags: ['Wedding Catering', 'Wood Fire Biryani', 'Live Stalls', 'Halal Certified', 'Grand Feast'],
+      aspectRatio: '2/3',
+    },
+    {
+      id: 'img-wedding-flyer',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-11 at 1.22.11 PM.jpeg',
+      title: 'Complete Wedding & Event Menu Breakdown',
+      description: 'Comprehensive catering lineup featuring live tea/coffee, mojito counters, mini thattu idly, and wood-fire dum biryani.',
+      category: 'package',
+      tags: ['Wedding Flyer', 'Live Stalls', 'Veg Menu', 'Wood Fire Biryani'],
+      aspectRatio: '3/4',
+    },
+    {
+      id: 'img-reception-services',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM.jpeg',
+      title: 'Grand Wedding & Reception Event Management',
+      description: 'All-inclusive services: Veg & Non-Veg feast, Live Stalls, DJ sound system, Reception Jothika Garlands, and Bridal Makeup.',
+      category: 'wedding',
+      tags: ['Reception', 'Event Management', 'DJ Music', 'Garlands', 'Bridal Makeup'],
+      aspectRatio: '16/9',
+    },
+    {
+      id: 'img-premium-600pax-pkg',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
+      title: 'Premium Grand Event Package (₹1.98 Lakhs / 600 Guests)',
+      description: 'Full-service event management: 600-guest dinner, Photography, Videography, DJ, Chenda Melam, Mehandi, and Dining Decor in Villivakkam & Perambur.',
+      category: 'wedding',
+      tags: ['Mega Wedding', '600 Pax', 'Chenda Melam', 'Photography', 'Chennai'],
+      aspectRatio: '16/9',
+    },
+    {
+      id: 'img-instagram-qr',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-11 at 1.28.08 PM.jpeg',
+      title: 'Official Instagram Handle (@SRI_CATERERES)',
+      description: 'Scan to connect with our official Instagram page for daily event stories, live food preparation, and customer moments.',
+      category: 'qr',
+      tags: ['Instagram', 'Social Media', 'QR Code', 'Connect'],
+      aspectRatio: '1/1',
+    },
+    {
+      id: 'img-dinner-tiffen-ratecard',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-16 at 8.07.41 PM.jpeg',
+      title: 'Dinner ₹299 & Tiffen ₹160 Per Plate Tariff Card',
+      description: 'Grand 39-item dinner banquet with sweets, dum biryani, live stalls, uniform service boys, and 2 welcome girls; plus 14-item ₹160 Muhurtham tiffen.',
+      category: 'menu',
+      tags: ['Dinner 299', 'Tiffen 160', 'Per Plate Rate', 'Tariff Card', 'Welcome Girls', 'Live Stalls'],
+      aspectRatio: '3/4',
+    },
+    {
+      id: 'img-reception-stall-menu',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-16 at 8.07.40 PM.jpeg',
+      title: 'Reception Feast & 13 Live Stall Counters',
+      description: '21-course dinner banquet coupled with 13 live counters including fruit stall, carrot halwa, ice creams, sweet beeda, popcorn, cotton candy, Aarathi plates (25), vegetable carving, and DJ.',
+      category: 'menu',
+      tags: ['Reception Menu', 'Live Counters', 'Fruit Stall', 'Ice Cream', 'Carrot Halwa', 'DJ'],
+      aspectRatio: '3/4',
+    },
+    {
+      id: 'img-raj-banquet-seemantham',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-16 at 8.13.20 PM.jpeg',
+      title: 'Raj Banquet Hall Seemantham Saapadu Special',
+      description: 'Seemantham baby shower feast with pot-served Elaneer Payasam, Malai roll, Veg prawn, Stuffed parotta, Kadai paneer, Palakkai biryani, and Cassata ice cream.',
+      category: 'menu',
+      tags: ['Seemantham', 'Baby Shower', 'Raj Banquet Hall', 'Elaneer Payasam', 'Palakkai Biryani'],
+      aspectRatio: '3/4',
+    },
+    {
+      id: 'img-total-labour-contract-menu',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-16 at 8.07.41 PM (1).jpeg',
+      title: 'Total Contract & Labour (Coolie) Contract Traditional Tamil Feast Menu',
+      description: 'Authentic pure vegetarian catering under both Total Contract (with materials) and Labour-only Contract options featuring Chettinad Kavuni Arisi Pongal, 10 variety rices, and Pulimandi.',
+      category: 'menu',
+      tags: ['Total Contract', 'Labour Contract', 'Coolie Contract', 'Kavuni Arisi Pongal', 'Variety Rice', 'Pure Veg'],
+      aspectRatio: '1/1',
+    },
+    {
+      id: 'img-2day-wedding-schedule-brochure',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-16 at 8.07.41 PM (2).jpeg',
+      title: 'Complete 2-Day Wedding Event Schedule & Banquet Brochure',
+      description: 'Full celebration breakdown: Welcome juices, evening snacks, live dessert counters, 30-item royal dinner, Muhurtham breakfast, and stage entertainment (DJ, Chenda Melam, Pyro entry).',
+      category: 'wedding',
+      tags: ['2-Day Wedding', 'Event Management', 'Chenda Melam', 'Pyro Entry', 'Breakfast', 'Dinner'],
+      aspectRatio: '1/1',
+    },
+    {
+      id: 'img-tiffin-combos-1-to-9',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-16 at 8.07.42 PM.jpeg',
+      title: '9 Curated Special Tiffin Combos (Menus 1 to 9)',
+      description: 'Nine distinctive evening tiffin and dinner sets with Madurai Jigarthanda, Badam Basundi, Shahi Tukda, Bun Parotta, Kothu Parotta, Nellai Sodhi, and filter coffee.',
+      category: 'menu',
+      tags: ['Tiffin Combos', 'Madurai Jigarthanda', 'Bun Parotta', 'Kothu Parotta', 'Basundi', '9 Menus'],
+      aspectRatio: '3/4',
+    },
+    {
+      id: 'img-baby-shower-3tier-menus',
+      type: 'image',
+      src: '/assets/images/WhatsApp Image 2026-10-16 at 8.07.42 PM (2).jpeg',
+      title: 'Baby Shower 3-Tier Variety Rice Feasts (Menus 1, 2, 3)',
+      description: 'Three traditional auspicious baby shower multi-course menus featuring 5 to 11 variety rices, Thayir Vadai, thuvaiyal, and classic payasams.',
+      category: 'menu',
+      tags: ['Baby Shower', 'Valakaapu', 'Seemantham', 'Variety Rices', 'Dahi Vada', 'Payasam'],
+      aspectRatio: '3/4',
+    },
+  ],
+  videos: [
+    {
+      id: 'vid-event-live-1',
+      type: 'video',
+      src: '/assets/videos/VID_20260701_195250_639.mp4',
+      title: 'Live Wedding Feast & Buffet Catering Counter',
+      description: 'Real-time footage of our dining service team presenting authentic banana-leaf service and buffet counters at a Chennai wedding.',
+      category: 'live-service',
+      tags: ['Wedding Hall', 'Buffet Counter', 'Live Service', 'Chennai Wedding'],
+      aspectRatio: '9/16',
+    },
+    {
+      id: 'vid-cooking-prep-2',
+      type: 'video',
+      src: '/assets/videos/VID_20261011_132440_823.mp4',
+      title: 'Master Chef Cooking & Wood-Fire Dum Biryani Preparation',
+      description: 'Watch our skilled chefs slow-cooking authentic aromatic Tamil Nadu wood-fire biryani using traditional brass degs and pure spices.',
+      category: 'live-service',
+      tags: ['Wood Fire Cooking', 'Dum Biryani', 'Kitchen Preparation', 'Authentic Taste'],
+      aspectRatio: '9/16',
+    },
+    {
+      id: 'vid-live-stalls-3',
+      type: 'video',
+      src: '/assets/videos/VID_20261011_132539_536.mp4',
+      title: 'Interactive Live Stalls & Welcome Drink Experience',
+      description: 'Guests enjoying fresh live stalls: mojito live counters, ice cream, cotton candy, and hot crispy live snacks.',
+      category: 'live-service',
+      tags: ['Live Stalls', 'Welcome Drinks', 'Mojitos', 'Interactive Counters'],
+      aspectRatio: '9/16',
+    },
+    {
+      id: 'vid-hall-hospitality-4',
+      type: 'video',
+      src: '/assets/videos/VID_20261011_132804_766.mp4',
+      title: 'Grand Hall Ambience & Traditional Hospitality Service',
+      description: 'Uniformed service staff attending to guests with prompt, courteous Tamil hospitality and hygienic table management.',
+      category: 'live-service',
+      tags: ['Hospitality', 'Service Boys', 'Hall Atmosphere', 'Event Management'],
+      aspectRatio: '9/16',
+    },
+  ],
+};

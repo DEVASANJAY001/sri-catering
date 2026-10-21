@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- 1. Home Page -->
+  <url>
+    <loc>https://sricaterers.in/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-07%20at%209.30.46%20PM.jpeg</image:loc>
+      <image:title>Sri Caterers Chennai Royal Wedding Banquet Feast</image:title>
+      <image:caption>Authentic Tamil Nadu Traditional Catering and Royal Event Management in Chennai</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 2. Services Overview -->
+  <url>
+    <loc>https://sricaterers.in/services</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 3. Tamil Wedding Catering -->
+  <url>
+    <loc>https://sricaterers.in/services/tamil-wedding-catering</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-07%20at%209.30.46%20PM.jpeg</image:loc>
+      <image:title>Tamil Wedding Catering Chennai Banana Leaf Feast</image:title>
+      <image:caption>Authentic Tamil wedding catering with wood-fire mutton biryani and traditional vegetarian feasts</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 4. Engagement & Reception Catering -->
+  <url>
+    <loc>https://sricaterers.in/services/engagement-reception-catering</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-11%20at%201.23.00%20PM.jpeg</image:loc>
+      <image:title>Engagement and Reception Catering Chennai Live Stalls</image:title>
+      <image:caption>Festive buffet spreads, live mocktails, and North-South Indian catering in Chennai</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 5. Traditional Family Functions (Seemantham, etc.) -->
+  <url>
+    <loc>https://sricaterers.in/services/traditional-family-functions</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-11%20at%201.23.00%20PM%20(1).jpeg</image:loc>
+      <image:title>Traditional Family Functions Seemantham Catering Chennai</image:title>
+      <image:caption>Auspicious 5-variety rice feast and pure traditional catering for family ceremonies</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 6. Birthday & Anniversary Catering -->
+  <url>
+    <loc>https://sricaterers.in/services/birthday-anniversary-catering</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-07%20at%209.29.39%20PM.jpeg</image:loc>
+      <image:title>Birthday and Anniversary Catering with Live Stalls</image:title>
+      <image:caption>Live snack stalls, cotton candy, popcorn, and delicious dinner buffets in Chennai</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 7. Corporate Catering -->
+  <url>
+    <loc>https://sricaterers.in/services/corporate-catering</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-07%20at%209.29.05%20PM%20(1).jpeg</image:loc>
+      <image:title>Corporate Catering and Executive Conference Lunches Chennai</image:title>
+      <image:caption>Hygienic executive lunch boxes, conference buffets, and live coffee stations</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 8. Housewarming (Grahapravesam) -->
+  <url>
+    <loc>https://sricaterers.in/services/housewarming-ceremonies</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-11%20at%201.22.11%20PM.jpeg</image:loc>
+      <image:title>Housewarming Ceremonies Grahapravesam Catering Chennai</image:title>
+      <image:caption>Dawn milk-boiling filter coffee, traditional tiffin, and opulent afternoon leaf feast</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 9. Temple & Annadhanam -->
+  <url>
+    <loc>https://sricaterers.in/services/temple-religious-functions</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 10. Festival Catering -->
+  <url>
+    <loc>https://sricaterers.in/services/festival-catering</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 11. Bulk Orders & Live Stalls -->
+  <url>
+    <loc>https://sricaterers.in/services/bulk-meal-orders-live-stalls</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 12. Menu & Packages -->
+  <url>
+    <loc>https://sricaterers.in/menu</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://sricaterers.in/assets/images/WhatsApp%20Image%202026-10-07%20at%209.29.06%20PM.jpeg</image:loc>
+      <image:title>Sri Caterers Mutton Biryani ₹269 Leaf Package</image:title>
+      <image:caption>Wood-fire Seeraga Samba mutton biryani on banana leaf with accompaniments</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 13. Gallery -->
+  <url>
+    <loc>https://sricaterers.in/gallery</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- 14. About Us -->
+  <url>
+    <loc>https://sricaterers.in/about</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 15. Event Booking Enquiry -->
+  <url>
+    <loc>https://sricaterers.in/enquiry</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- 16. Contact Page -->
+  <url>
+    <loc>https://sricaterers.in/contact</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- 17. Privacy Policy -->
+  <url>
+    <loc>https://sricaterers.in/privacy-policy</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

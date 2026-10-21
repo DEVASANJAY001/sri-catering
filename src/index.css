@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  body {
+    @apply bg-ivory text-charcoal antialiased min-h-screen overflow-x-hidden;
+  }
+
+  /* Traditional scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f4efe6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c5274d;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9b1135;
+  }
+}
+
+@layer utilities {
+  /* Subtle traditional Kolam / Temple arch inspired pattern overlay */
+  .bg-kolam-subtle {
+    background-image: radial-gradient(#d97706 0.75px, transparent 0.75px), radial-gradient(#9b1135 0.75px, #faf7f2 0.75px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    background-opacity: 0.04;
+  }
+
+  .bg-maroon-gradient {
+    background: linear-gradient(135deg, #7e102d 0%, #5a0c20 60%, #3a0513 100%);
+  }
+
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
+  }
+
+  .bg-leaf-gradient {
+    background: linear-gradient(135deg, #15803d 0%, #166534 60%, #14532d 100%);
+  }
+
+  .gold-border-glow {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+  }
+}
+
+/* Print friendly rules */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

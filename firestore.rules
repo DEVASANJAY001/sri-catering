@@ -1,0 +1,72 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Enforce dashboard authorization via custom claim OR adminUsers / admins collection
+    function isAdmin() {
+      return isAuthenticated() && (
+        (request.auth.token.admin == true) ||
+        (exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/adminUsers/$(request.auth.uid)).data.isActive == true) ||
+        (exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.isActive == true)
+      );
+    }
+
+    // ===============================================================
+    // 1. Customer Enquiries Collection (`enquiries`)
+    // ===============================================================
+    match /enquiries/{enquiryId} {
+      // Public visitors can only create new enquiries with valid name & phone number
+      // Public visitors can NEVER read, update, list, or delete enquiries
+      allow create: if request.resource.data.customerName is string
+                    && request.resource.data.customerName.size() >= 2
+                    && request.resource.data.mobileNumber is string
+                    && request.resource.data.mobileNumber.size() == 10;
+
+      // Only authenticated, authorized admins can read, update status, assign, or delete enquiries
+      allow read, update, delete: if isAdmin();
+
+      // Subcollection for internal notes locked to authorized admin UIDs
+      match /notes/{noteId} {
+        allow read: if isAdmin();
+        allow create: if isAdmin() && request.resource.data.adminUid == request.auth.uid;
+        allow update, delete: if isAdmin() && resource.data.adminUid == request.auth.uid;
+      }
+    }
+
+    // ===============================================================
+    // 2. Administrator Users (`adminUsers` & `admins`)
+    // ===============================================================
+    match /adminUsers/{adminId} {
+      // Authenticated users can read admin profiles for assignment/display
+      allow read: if isAuthenticated();
+      // Only authorized admins can write/update admin roster
+      allow write: if isAdmin();
+    }
+
+    match /admins/{adminId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // ===============================================================
+    // 3. Real-Time Website Traffic & Visitor Analytics (`analytics`)
+    // ===============================================================
+    match /analytics/{docId} {
+      // Public visitors record hit counters; admins read dashboard metrics
+      allow read, write: if true;
+    }
+
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

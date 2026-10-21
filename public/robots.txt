@@ -1,0 +1,10 @@
+# Robots.txt for Sri Caterers Chennai
+# https://sricaterers.in
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+# Sitemaps
+Sitemap: https://sricaterers.in/sitemap.xml
