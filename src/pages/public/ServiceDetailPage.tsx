@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import {
   CalendarCheck,
@@ -9,6 +9,10 @@ import {
   ArrowLeft,
   Phone,
   MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  X,
 } from 'lucide-react';
 import { CATERING_SERVICES } from '../../data/services';
 import { siteConfig } from '../../config/siteConfig';
@@ -20,6 +24,72 @@ export const ServiceDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
 
   const service = CATERING_SERVICES.find((s) => s.slug === slug);
+
+  const bannerImages = (service?.menuCardImages && service.menuCardImages.length > 0)
+    ? service.menuCardImages
+    : (service ? [service.menuCardImageSrc] : []);
+
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartXRef = useRef<number | null>(null);
+
+  // Reset to first slide if service changes
+  useEffect(() => {
+    setActiveIdx(0);
+  }, [slug]);
+
+  // Auto-play cycling when there are multiple banner cards and user isn't hovering
+  useEffect(() => {
+    if (bannerImages.length <= 1 || isPaused || isLightboxOpen) return;
+    const interval = setInterval(() => {
+      setActiveIdx((prev) => (prev + 1) % bannerImages.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [bannerImages.length, isPaused, isLightboxOpen]);
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsLightboxOpen(false);
+      if (e.key === 'ArrowRight') setActiveIdx((prev) => (prev + 1) % bannerImages.length);
+      if (e.key === 'ArrowLeft') setActiveIdx((prev) => (prev - 1 + bannerImages.length) % bannerImages.length);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLightboxOpen, bannerImages.length]);
+
+  const handleNext = () => {
+    setActiveIdx((prev) => (prev + 1) % bannerImages.length);
+  };
+
+  const handlePrev = () => {
+    setActiveIdx((prev) => (prev - 1 + bannerImages.length) % bannerImages.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    if (deltaX > 40) {
+      handlePrev();
+    } else if (deltaX < -40) {
+      handleNext();
+    }
+    touchStartXRef.current = null;
+  };
+
+  const getCardLabel = (idx: number) => {
+    if (service?.slug === 'a-to-z-wedding-service' || service?.slug === 'ac-wedding-hall') {
+      if (idx === 0) return { title: 'Package Overview (₹1.98L)', subtitle: '600 Guests Full Package' };
+      if (idx === 1) return { title: 'Menu & Inclusions List', subtitle: 'Veg, Non-Veg & Stalls' };
+    }
+    return { title: `Card ${idx + 1}`, subtitle: 'Official Tariff Sheet' };
+  };
 
   if (!service) {
     return <Navigate to="/services" replace />;
@@ -76,25 +146,186 @@ export const ServiceDetailPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* Left Column: Visual Asset - Official Menu Card & Live Setup */}
         <div className="lg:col-span-5 space-y-6">
-          {/* Main Visual Box: Official Menu Card */}
-          <div className="rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-gold/40 shadow-xl bg-white relative group">
+          {/* Main Visual Box: Official Menu Card Banner Sequence */}
+          <div
+            className="rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-gold/40 shadow-xl bg-white relative group"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            {/* Banner Header */}
             <div className="bg-maroon-900 text-amber-200 px-4 py-2.5 flex items-center justify-between border-b border-gold/30">
-              <span className="font-serif text-xs sm:text-sm font-bold flex items-center">
-                <Utensils className="w-3.5 h-3.5 mr-1.5 text-gold" />
-                Official Menu Card &amp; Package
-              </span>
+              <div className="flex items-center space-x-2">
+                <Utensils className="w-3.5 h-3.5 text-gold shrink-0" />
+                <span className="font-serif text-xs sm:text-sm font-bold">
+                  Official Menu Card &amp; Package
+                </span>
+                {bannerImages.length > 1 && (
+                  <span className="ml-1 px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[10px] font-bold border border-gold/40">
+                    {activeIdx + 1} of {bannerImages.length}
+                  </span>
+                )}
+              </div>
               <span className="text-[10px] sm:text-xs text-amber-300 font-tamil font-medium">
                 அதிகாரப்பூர்வ மெனு கார்டு
               </span>
             </div>
 
-            <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-stone-900/5 overflow-hidden flex items-center justify-center p-1 sm:p-2">
+            {/* Sequence Selector Tabs (if multiple images) */}
+            {bannerImages.length > 1 && (
+              <div className="bg-amber-50/80 border-b border-gold/20 p-1.5 flex gap-1.5">
+                {bannerImages.map((_, idx) => {
+                  const label = getCardLabel(idx);
+                  const isActive = activeIdx === idx;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActiveIdx(idx)}
+                      className={`flex-1 py-1.5 px-2.5 rounded-lg text-left transition-all flex items-center justify-between ${
+                        isActive
+                          ? 'bg-maroon-800 text-amber-100 shadow-sm border border-gold/40'
+                          : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200'
+                      }`}
+                    >
+                      <div className="truncate">
+                        <p className="text-[11px] font-bold leading-tight truncate">
+                          {label.title}
+                        </p>
+                        <p className={`text-[9px] truncate ${isActive ? 'text-amber-300' : 'text-stone-400'}`}>
+                          {label.subtitle}
+                        </p>
+                      </div>
+                      <span
+                        className={`text-[9px] font-extrabold ml-1 px-1.5 py-0.5 rounded ${
+                          isActive ? 'bg-gold/30 text-gold-light' : 'bg-stone-200 text-stone-600'
+                        }`}
+                      >
+                        {idx + 1}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Image Stage */}
+            <div
+              className="relative aspect-[3/4] sm:aspect-[4/5] bg-stone-900/5 overflow-hidden flex items-center justify-center p-1 sm:p-2 cursor-pointer"
+              onClick={() => setIsLightboxOpen(true)}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               <img
-                src={service.menuCardImageSrc}
-                alt={`${service.title} Official Menu Card`}
-                className="w-full h-full object-contain group-hover:scale-102 transition-transform duration-300 rounded-xl"
+                src={bannerImages[activeIdx]}
+                alt={`${service.title} Official Menu Card - Part ${activeIdx + 1}`}
+                key={bannerImages[activeIdx]}
+                className="w-full h-full object-contain rounded-xl transition-all duration-300 group-hover:scale-102"
               />
+
+              {/* Prev / Next buttons if multiple images */}
+              {bannerImages.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePrev();
+                    }}
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-maroon-950/80 hover:bg-maroon-950 text-amber-200 border border-gold/50 shadow-lg backdrop-blur-xs transition-all hover:scale-110 active:scale-95 z-10"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNext();
+                    }}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-maroon-950/80 hover:bg-maroon-950 text-amber-200 border border-gold/50 shadow-lg backdrop-blur-xs transition-all hover:scale-110 active:scale-95 z-10"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </>
+              )}
+
+              {/* Zoom In button hint on top right */}
+              <div className="absolute top-3 right-3 bg-stone-950/75 backdrop-blur-xs text-white px-2.5 py-1 rounded-full text-[10px] font-semibold border border-white/20 flex items-center space-x-1 shadow-md opacity-85 group-hover:opacity-100 transition-opacity">
+                <ZoomIn className="w-3 h-3 text-gold" />
+                <span>Tap to Zoom</span>
+              </div>
+
+              {/* Sequence Dots at bottom */}
+              {bannerImages.length > 1 && (
+                <div
+                  className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center space-x-1.5 bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10 z-10"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {bannerImages.map((_, dotIdx) => (
+                    <button
+                      key={dotIdx}
+                      type="button"
+                      onClick={() => setActiveIdx(dotIdx)}
+                      className={`h-2 rounded-full transition-all ${
+                        activeIdx === dotIdx ? 'w-5 bg-gold' : 'w-2 bg-white/50 hover:bg-white/80'
+                      }`}
+                      aria-label={`Go to slide ${dotIdx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
+
+            {/* Bottom Sequence Previews Strip */}
+            {bannerImages.length > 1 && (
+              <div className="bg-stone-50 border-t border-stone-200 p-2.5">
+                <div className="flex items-center justify-between mb-1.5 px-0.5">
+                  <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
+                    Package Sequence (Click to Switch)
+                  </span>
+                  <span className="text-[10px] text-maroon-700 font-semibold font-tamil">
+                    வரிசைப்படி பார்க்க
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {bannerImages.map((imgSrc, idx) => {
+                    const label = getCardLabel(idx);
+                    const isActive = activeIdx === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setActiveIdx(idx)}
+                        className={`flex items-center space-x-2 p-1.5 rounded-xl border text-left transition-all ${
+                          isActive
+                            ? 'border-gold bg-amber-50/80 ring-2 ring-gold/40 shadow-xs'
+                            : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50'
+                        }`}
+                      >
+                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-stone-100 border border-stone-200">
+                          <img src={imgSrc} alt={label.title} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center space-x-1">
+                            <span className="text-[9px] font-bold text-maroon-800">Part {idx + 1}:</span>
+                            <p className="text-[10px] font-bold text-charcoal truncate">{label.title}</p>
+                          </div>
+                          <span
+                            className={`text-[9px] font-medium ${
+                              isActive ? 'text-gold-dark font-bold' : 'text-stone-400'
+                            }`}
+                          >
+                            {isActive ? '● Currently Viewing' : 'Click to View'}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Real Feast & Setup Photo */}
@@ -268,6 +499,98 @@ export const ServiceDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal for Fullscreen Menu Card Viewing */}
+      {isLightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex flex-col items-center justify-center p-3 sm:p-6"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          {/* Lightbox Header Bar */}
+          <div
+            className="w-full max-w-4xl flex items-center justify-between text-white pb-3 px-2 border-b border-white/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center space-x-2 min-w-0">
+              <Utensils className="w-4 h-4 text-gold shrink-0" />
+              <span className="font-serif font-bold text-sm sm:text-base text-gold truncate">
+                {service.title} - {getCardLabel(activeIdx).title}
+              </span>
+              {bannerImages.length > 1 && (
+                <span className="text-xs text-amber-200/80 font-mono shrink-0 px-2 py-0.5 rounded-full bg-white/10">
+                  {activeIdx + 1} / {bannerImages.length}
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsLightboxOpen(false)}
+              className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors ml-2 shrink-0"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Lightbox Main Image & Navigation */}
+          <div
+            className="relative w-full max-w-4xl flex-1 flex items-center justify-center my-3 min-h-0"
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <img
+              src={bannerImages[activeIdx]}
+              alt={`${service.title} Menu Card`}
+              className="max-h-[75vh] w-auto max-w-full object-contain rounded-lg shadow-2xl"
+            />
+
+            {bannerImages.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="absolute left-2 sm:-left-5 top-1/2 -translate-y-1/2 p-2.5 sm:p-3 rounded-full bg-stone-900/85 hover:bg-gold hover:text-maroon-950 text-white border border-white/20 transition-all shadow-xl hover:scale-110 active:scale-95"
+                  aria-label="Previous card"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="absolute right-2 sm:-right-5 top-1/2 -translate-y-1/2 p-2.5 sm:p-3 rounded-full bg-stone-900/85 hover:bg-gold hover:text-maroon-950 text-white border border-white/20 transition-all shadow-xl hover:scale-110 active:scale-95"
+                  aria-label="Next card"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Lightbox Footer Thumbnails */}
+          {bannerImages.length > 1 && (
+            <div
+              className="flex items-center space-x-3 pt-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {bannerImages.map((imgSrc, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveIdx(idx)}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                    activeIdx === idx
+                      ? 'border-gold ring-2 ring-gold/50 scale-105 opacity-100'
+                      : 'border-white/30 opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={imgSrc} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

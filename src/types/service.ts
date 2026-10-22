@@ -7,6 +7,7 @@ export interface CateringServiceItem {
   fullDescription: string;
   imageSrc: string;
   menuCardImageSrc: string;
+  menuCardImages?: string[];
   eventTypesSupported: string[];
   mealStyles: string[];
   guestCountRange: string;

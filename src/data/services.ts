@@ -10,6 +10,10 @@ export const CATERING_SERVICES: CateringServiceItem[] = [
     fullDescription: 'At SRI Wedding Caterers, we offer a complete range of wedding and event services designed to make your special day truly unforgettable. From initial muhurtham planning, traditional banana leaf feasts, and live counters to stage floral decoration, Chenda Melam, bridal styling, photography, and hospitality management.',
     imageSrc: '/assets/images/services/atoz-wedding-service.jpg',
     menuCardImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
+    menuCardImages: [
+      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
+      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM.jpeg'
+    ],
     eventTypesSupported: ['A to Z Wedding (முழு திருமணம்)', 'Muhurtham', 'Reception (வரவேற்பு)', 'Sangeet'],
     mealStyles: ['Traditional Banana Leaf (இலை சாப்பாடு)', 'Royal Banquet Buffet', 'Live Chef Counters'],
     guestCountRange: '300 to 3,000+ Guests',
@@ -31,7 +35,11 @@ export const CATERING_SERVICES: CateringServiceItem[] = [
     shortDescription: 'Celebrate in comfort and style with our fully air-conditioned wedding halls, designed to host your guests.',
     fullDescription: 'Celebrate in comfort and style with our fully air-conditioned wedding halls, designed to host your guests in Chennai (Villivakkam, Perambur, Kolathur, Anna Nagar & surrounding areas). Featuring spacious dining halls, crystal chandeliers, air-conditioned bridal suites, power backup, and full catering logistics.',
     imageSrc: '/assets/images/services/ac-wedding-hall.jpg',
-    menuCardImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM.jpeg',
+    menuCardImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
+    menuCardImages: [
+      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
+      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM.jpeg'
+    ],
     eventTypesSupported: ['Wedding Reception', 'A/C Hall Banquet', 'Corporate Conclave', 'Engagement'],
     mealStyles: ['Centralized A/C Dining Hall', 'Seated Banana Leaf Service', 'Executive Buffet'],
     guestCountRange: '200 to 2,500+ Guests',

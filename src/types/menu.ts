@@ -24,6 +24,7 @@ export interface MenuPackage {
   features: string[];
   imageSrc: string;
   flyerImageSrc?: string;
+  flyerImages?: string[];
   badge?: string;
   category?: 'leaf-meal' | 'wedding-grand' | 'event-management' | 'tariff-card';
   dietaryNorm?: 'pure-veg' | 'halal-non-veg' | 'all';

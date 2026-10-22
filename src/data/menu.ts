@@ -108,28 +108,11 @@ export const MENU_PACKAGES: MenuPackage[] = [
     ],
     imageSrc: '/assets/images/packages/pkg-mega-600pax-198k.jpg',
     flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
-    badge: 'All-In-One Mega Package'
-  },
-  {
-    id: 'pkg-reception-services',
-    name: 'Grand Wedding & Reception Event Management',
-    tamilName: 'திருமண வரவேற்பு & நிகழ்வு மேலாண்மை பேக்கேஜ்',
-    priceTag: 'Custom Bespoke Quote',
-    highlight: 'Grand Reception Banquets & Stage Management',
-    description: 'All-inclusive services for wedding receptions: dual Veg/Non-Veg feasts, live counter stalls, stage floral decor, DJ system, and bridal garlands.',
-    category: 'event-management',
-    dietaryNorm: 'all',
-    features: [
-      'Full-Course Vegetarian & Non-Vegetarian Feasts',
-      'Live Stalls: Mojito bar, Ice Cream Mukkani, Sweet Beeda counter',
-      'Reception Jothika Garlands (Malai) for Bride & Groom',
-      'Bridal Makeup & Styling Services',
-      'High-Grade Sound System & DJ Entertainment',
-      'Full Event Coordination & Dining Management Staff'
+    flyerImages: [
+      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
+      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM.jpeg'
     ],
-    imageSrc: '/assets/images/packages/pkg-reception-services.jpg',
-    flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM.jpeg',
-    badge: 'Reception Special'
+    badge: 'All-In-One Mega Package'
   },
   {
     id: 'pkg-traditional-4tier-leaf',

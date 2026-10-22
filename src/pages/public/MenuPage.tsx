@@ -51,8 +51,14 @@ export const MenuPage: React.FC = () => {
   const [servingFilter, setServingFilter] = useState<'all' | 'banana-leaf' | 'live-stall' | 'buffet'>('all');
 
   // Modals state
-  const [previewImage, setPreviewImage] = useState<{ src: string; title: string } | null>(null);
+  const [previewImage, setPreviewImage] = useState<{
+    src: string;
+    title: string;
+    images?: string[];
+    activeIndex?: number;
+  } | null>(null);
   const [selectedPackageDetails, setSelectedPackageDetails] = useState<MenuPackage | null>(null);
+  const [packageFlyerIndex, setPackageFlyerIndex] = useState(0);
 
   // URL search params for deep linking from Home Page or external links
   const [searchParams, setSearchParams] = useSearchParams();
@@ -70,6 +76,7 @@ export const MenuPage: React.FC = () => {
       );
       if (matched) {
         setSelectedPackageDetails(matched);
+        setPackageFlyerIndex(0);
         setSelectedPackageCategory('All');
         setTimeout(() => {
           const el = document.getElementById('packages-section');
@@ -82,6 +89,7 @@ export const MenuPage: React.FC = () => {
   }, [packageParam]);
 
   const handleOpenPackageDetails = (pkg: MenuPackage) => {
+    setPackageFlyerIndex(0);
     setSelectedPackageDetails(pkg);
     setSearchParams({ package: pkg.id }, { replace: true });
   };
@@ -809,46 +817,187 @@ export const MenuPage: React.FC = () => {
             </div>
 
             {/* Split Content: Flyer Preview on Left, Inclusions on Right */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left Column: Official Menu Card / Flyer */}
-              <div className="space-y-3">
-                <div
-                  className="rounded-2xl overflow-hidden border border-stone-200 bg-stone-100 relative group cursor-pointer shadow-xs max-h-[380px] flex items-center justify-center"
-                  onClick={() =>
-                    setPreviewImage({
-                      src: selectedPackageDetails.flyerImageSrc || selectedPackageDetails.imageSrc,
-                      title: selectedPackageDetails.name,
-                    })
-                  }
-                >
-                  <img
-                    src={selectedPackageDetails.flyerImageSrc || selectedPackageDetails.imageSrc}
-                    alt={selectedPackageDetails.name}
-                    className="w-full h-auto object-contain max-h-[380px] group-hover:scale-102 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-1.5">
-                    <Eye className="w-4 h-4" />
-                    <span>Click to Zoom Flyer</span>
-                  </div>
-                </div>
+            {(() => {
+              const selectedFlyers = selectedPackageDetails.flyerImages && selectedPackageDetails.flyerImages.length > 0
+                ? selectedPackageDetails.flyerImages
+                : [selectedPackageDetails.flyerImageSrc || selectedPackageDetails.imageSrc];
+              const safeIndex = packageFlyerIndex < selectedFlyers.length ? packageFlyerIndex : 0;
+              const currentFlyerSrc = selectedFlyers[safeIndex];
 
-                <div className="flex items-center justify-between text-xs text-stone-500">
-                  <span>Official Published Menu Flyer</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPreviewImage({
-                        src: selectedPackageDetails.flyerImageSrc || selectedPackageDetails.imageSrc,
-                        title: selectedPackageDetails.name,
-                      })
-                    }
-                    className="text-maroon-800 hover:underline font-semibold flex items-center"
-                  >
-                    <Eye className="w-3.5 h-3.5 mr-1" />
-                    View Fullscreen
-                  </button>
-                </div>
-              </div>
+              const getPackageFlyerLabel = (idx: number) => {
+                if (selectedPackageDetails.id === 'pkg-mega-600pax-198k') {
+                  if (idx === 0) return { title: 'Part 1: Package Flyer (₹1.98L)', subtitle: '600 Guests Overview' };
+                  if (idx === 1) return { title: 'Part 2: Detailed Menu & Stalls', subtitle: 'Veg, Non-Veg & Add-ons' };
+                }
+                return { title: `Part ${idx + 1}`, subtitle: 'Official Menu Flyer' };
+              };
+
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Left Column: Official Menu Card / Flyer */}
+                  <div className="space-y-3">
+                    {/* Flyer Switcher Tabs if multiple images */}
+                    {selectedFlyers.length > 1 && (
+                      <div className="flex gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200">
+                        {selectedFlyers.map((_, idx) => {
+                          const label = getPackageFlyerLabel(idx);
+                          const isActive = safeIndex === idx;
+                          return (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setPackageFlyerIndex(idx)}
+                              className={`flex-1 py-1 px-2 rounded-lg text-left transition-all flex items-center justify-between ${
+                                isActive
+                                  ? 'bg-maroon-800 text-amber-100 shadow-xs border border-gold/40'
+                                  : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200'
+                              }`}
+                            >
+                              <div className="truncate">
+                                <p className="text-[11px] font-bold truncate leading-tight">{label.title}</p>
+                                <p className={`text-[9px] truncate ${isActive ? 'text-amber-300' : 'text-stone-400'}`}>
+                                  {label.subtitle}
+                                </p>
+                              </div>
+                              <span
+                                className={`text-[9px] font-extrabold ml-1 px-1.5 py-0.5 rounded ${
+                                  isActive ? 'bg-gold/30 text-gold-light' : 'bg-stone-200 text-stone-600'
+                                }`}
+                              >
+                                {idx + 1}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    <div
+                      className="rounded-2xl overflow-hidden border border-stone-200 bg-stone-100 relative group cursor-pointer shadow-xs max-h-[380px] flex items-center justify-center p-1"
+                      onClick={() =>
+                        setPreviewImage({
+                          src: currentFlyerSrc,
+                          title: selectedPackageDetails.name,
+                          images: selectedFlyers,
+                          activeIndex: safeIndex,
+                        })
+                      }
+                    >
+                      <img
+                        src={currentFlyerSrc}
+                        alt={`${selectedPackageDetails.name} Flyer - Part ${safeIndex + 1}`}
+                        key={currentFlyerSrc}
+                        className="w-full h-auto object-contain max-h-[380px] group-hover:scale-102 transition-transform duration-300 rounded-xl"
+                      />
+
+                      {/* Prev / Next buttons if multiple */}
+                      {selectedFlyers.length > 1 && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPackageFlyerIndex((prev) => (prev - 1 + selectedFlyers.length) % selectedFlyers.length);
+                            }}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-maroon-950/80 hover:bg-maroon-950 text-amber-200 border border-gold/50 shadow-md transition-all hover:scale-110 active:scale-95 z-10"
+                            aria-label="Previous flyer"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPackageFlyerIndex((prev) => (prev + 1) % selectedFlyers.length);
+                            }}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-maroon-950/80 hover:bg-maroon-950 text-amber-200 border border-gold/50 shadow-md transition-all hover:scale-110 active:scale-95 z-10"
+                            aria-label="Next flyer"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-1.5 rounded-xl pointer-events-none">
+                        <Eye className="w-4 h-4 text-gold" />
+                        <span>Click to Zoom Flyer</span>
+                      </div>
+
+                      {/* Dots indicator at bottom */}
+                      {selectedFlyers.length > 1 && (
+                        <div
+                          className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center space-x-1.5 bg-black/60 px-2 py-0.5 rounded-full z-10"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {selectedFlyers.map((_, dotIdx) => (
+                            <button
+                              key={dotIdx}
+                              type="button"
+                              onClick={() => setPackageFlyerIndex(dotIdx)}
+                              className={`h-1.5 rounded-full transition-all ${
+                                safeIndex === dotIdx ? 'w-4 bg-gold' : 'w-1.5 bg-white/50'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-stone-500">
+                      <span>
+                        {selectedFlyers.length > 1
+                          ? `Part ${safeIndex + 1} of ${selectedFlyers.length} • Official Menu Flyer`
+                          : 'Official Published Menu Flyer'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPreviewImage({
+                            src: currentFlyerSrc,
+                            title: selectedPackageDetails.name,
+                            images: selectedFlyers,
+                            activeIndex: safeIndex,
+                          })
+                        }
+                        className="text-maroon-800 hover:underline font-semibold flex items-center cursor-pointer"
+                      >
+                        <Eye className="w-3.5 h-3.5 mr-1" />
+                        View Fullscreen
+                      </button>
+                    </div>
+
+                    {/* Thumbnail Switcher Strip */}
+                    {selectedFlyers.length > 1 && (
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        {selectedFlyers.map((imgSrc, idx) => {
+                          const label = getPackageFlyerLabel(idx);
+                          const isActive = safeIndex === idx;
+                          return (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setPackageFlyerIndex(idx)}
+                              className={`flex items-center space-x-2 p-1.5 rounded-xl border text-left transition-all ${
+                                isActive
+                                  ? 'border-gold bg-amber-50/80 ring-2 ring-gold/40 shadow-xs'
+                                  : 'border-stone-200 bg-white hover:border-stone-300'
+                              }`}
+                            >
+                              <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-stone-100 border border-stone-200">
+                                <img src={imgSrc} alt="" className="w-full h-full object-cover" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-[10px] font-bold text-charcoal truncate">{label.title}</p>
+                                <span className={`text-[8px] font-medium ${isActive ? 'text-gold-dark font-bold' : 'text-stone-400'}`}>
+                                  {isActive ? '● Active' : 'Switch'}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
 
               {/* Right Column: Inclusions & Details */}
               <div className="space-y-4 flex flex-col justify-between">
@@ -904,6 +1053,8 @@ export const MenuPage: React.FC = () => {
                 </div>
               </div>
             </div>
+          );
+        })()}
           </div>
         </Modal>
       )}
@@ -913,17 +1064,82 @@ export const MenuPage: React.FC = () => {
         <Modal
           isOpen={Boolean(previewImage)}
           onClose={() => setPreviewImage(null)}
-          title={previewImage.title}
+          title={`${previewImage.title}${previewImage.images && previewImage.images.length > 1 ? ` (Part ${(previewImage.activeIndex ?? 0) + 1} of ${previewImage.images.length})` : ''}`}
           maxWidth="2xl"
         >
           <div className="space-y-4">
-            <div className="rounded-xl overflow-hidden border border-stone-200 bg-stone-100 flex items-center justify-center max-h-[70vh]">
+            <div className="relative rounded-xl overflow-hidden border border-stone-200 bg-stone-100 flex items-center justify-center max-h-[70vh]">
               <img
                 src={previewImage.src}
                 alt={previewImage.title}
                 className="w-full h-auto object-contain max-h-[70vh]"
               />
+
+              {previewImage.images && previewImage.images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextIdx =
+                        ((previewImage.activeIndex ?? 0) - 1 + previewImage.images!.length) %
+                        previewImage.images!.length;
+                      setPreviewImage({
+                        ...previewImage,
+                        src: previewImage.images![nextIdx],
+                        activeIndex: nextIdx,
+                      });
+                    }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/75 hover:bg-gold hover:text-maroon-950 text-white border border-white/20 transition-all shadow-lg hover:scale-105 active:scale-95"
+                    aria-label="Previous flyer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextIdx =
+                        ((previewImage.activeIndex ?? 0) + 1) % previewImage.images!.length;
+                      setPreviewImage({
+                        ...previewImage,
+                        src: previewImage.images![nextIdx],
+                        activeIndex: nextIdx,
+                      });
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/75 hover:bg-gold hover:text-maroon-950 text-white border border-white/20 transition-all shadow-lg hover:scale-105 active:scale-95"
+                    aria-label="Next flyer"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </>
+              )}
             </div>
+
+            {previewImage.images && previewImage.images.length > 1 && (
+              <div className="flex items-center justify-center space-x-2">
+                {previewImage.images.map((imgSrc, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setPreviewImage({
+                        ...previewImage,
+                        src: imgSrc,
+                        activeIndex: idx,
+                      });
+                    }}
+                    className={`w-14 h-14 rounded-lg overflow-hidden border-2 transition-all ${
+                      (previewImage.activeIndex ?? 0) === idx
+                        ? 'border-gold ring-2 ring-gold/40 shadow-xs'
+                        : 'border-stone-200 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={imgSrc} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="flex items-center justify-between text-xs text-stone-500">
               <span>Official Sri Caterers Menu Flyer</span>
               <a
