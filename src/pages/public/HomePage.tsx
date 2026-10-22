@@ -364,7 +364,7 @@ export const HomePage: React.FC = () => {
             to="/gallery"
             className="inline-flex items-center text-xs sm:text-sm font-bold text-maroon-800 hover:text-maroon-950 underline"
           >
-            <span>Open Full Gallery with 9 Images &amp; 4 Videos</span>
+            <span>Open Full Gallery ({MEDIA_ASSETS.videos.length} Live Feasts &amp; Kitchen Reels)</span>
             <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </Link>
         </div>

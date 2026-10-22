@@ -253,11 +253,11 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between text-xs text-stone-400 gap-4">
-          <p>
+        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between text-[10px] sm:text-xs text-stone-400 gap-2.5 sm:gap-4 text-center md:text-left">
+          <p className="text-[10px] sm:text-xs text-stone-400/90 leading-tight">
             © {new Date().getFullYear()} {siteConfig.fullName}. All rights reserved.
           </p>
-          <p className="text-center md:text-left">
+          <p className="text-[10px] sm:text-xs text-stone-400/90 leading-tight">
             Designed and Developed by{' '}
             <a
               href="https://davns.com"
@@ -268,10 +268,11 @@ export const Footer: React.FC = () => {
               Davns Industries
             </a>
           </p>
-          <div className="flex space-x-4">
+          <div className="flex items-center space-x-3 sm:space-x-4 text-[10px] sm:text-xs">
             <Link to="/privacy-policy" className="hover:text-stone-300 underline">
               Privacy Policy
             </Link>
+            <span className="text-stone-600 sm:hidden">•</span>
             <Link to="/contact" className="hover:text-stone-300 underline">
               Contact Us
             </Link>
