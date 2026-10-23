@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, Sparkles, Calendar, FileText, ChevronRight } from 'lucide-react';
+import { Check, Sparkles, Calendar, FileText, ChevronRight, Layers } from 'lucide-react';
 import { MenuPackage } from '../../types/menu';
 
 export interface MenuPackageCardProps {
   pkg: MenuPackage;
-  onPreviewImage?: (src: string, title: string) => void;
+  onPreviewImage?: (src: string, title: string, images?: string[], activeIndex?: number) => void;
   onViewDetails?: (pkg: MenuPackage) => void;
   isTargeted?: boolean;
 }
@@ -29,7 +29,10 @@ export const MenuPackageCard: React.FC<MenuPackageCardProps> = ({
     if (onViewDetails) {
       onViewDetails(pkg);
     } else if (onPreviewImage) {
-      onPreviewImage(pkg.flyerImageSrc || pkg.imageSrc, pkg.name);
+      const allFlyers = pkg.flyerImages && pkg.flyerImages.length > 0
+        ? pkg.flyerImages
+        : [pkg.flyerImageSrc || pkg.imageSrc];
+      onPreviewImage(pkg.flyerImageSrc || pkg.imageSrc, pkg.name, allFlyers, 0);
     } else {
       navigate(`/menu?package=${encodeURIComponent(pkg.id)}`);
     }
@@ -74,9 +77,17 @@ export const MenuPackageCard: React.FC<MenuPackageCardProps> = ({
             </span>
           ) : <span />}
 
-          <span className="shrink-0 px-2.5 py-1 rounded-lg bg-gold-dark text-stone-900 font-extrabold text-[10px] sm:text-xs shadow-md whitespace-nowrap border border-amber-300/40">
-            {pkg.priceTag}
-          </span>
+          <div className="flex items-center gap-1.5">
+            {pkg.flyerImages && pkg.flyerImages.length > 1 && (
+              <span className="shrink-0 px-2 py-0.5 rounded-lg bg-black/75 text-amber-300 font-bold text-[10px] backdrop-blur-xs border border-amber-300/30 flex items-center gap-1 shadow-xs">
+                <Layers className="w-2.5 h-2.5 text-gold" />
+                <span>{pkg.flyerImages.length} Menus</span>
+              </span>
+            )}
+            <span className="shrink-0 px-2.5 py-1 rounded-lg bg-gold-dark text-stone-900 font-extrabold text-[10px] sm:text-xs shadow-md whitespace-nowrap border border-amber-300/40">
+              {pkg.priceTag}
+            </span>
+          </div>
         </div>
 
         {/* Bottom Title on Image */}

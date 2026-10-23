@@ -85,10 +85,16 @@ export const ServiceDetailPage: React.FC = () => {
 
   const getCardLabel = (idx: number) => {
     if (service?.slug === 'a-to-z-wedding-service' || service?.slug === 'ac-wedding-hall') {
-      if (idx === 0) return { title: 'Package Overview (₹1.98L)', subtitle: '600 Guests Full Package' };
-      if (idx === 1) return { title: 'Menu & Inclusions List', subtitle: 'Veg, Non-Veg & Stalls' };
+      if (idx === 0) return { title: 'Package Overview (₹1.98L)', shortTitle: '₹1.98L Package', subtitle: '600 Guests Overview', badge: 'Overview' };
+      if (idx === 1) return { title: 'Menu & Inclusions List', shortTitle: 'Menu & Stalls', subtitle: 'Veg, Non-Veg & Stalls', badge: 'Inclusions' };
     }
-    return { title: `Card ${idx + 1}`, subtitle: 'Official Tariff Sheet' };
+    if (service?.slug === 'temple-religious-functions' || service?.menuCardImages?.length === 4) {
+      if (idx === 0) return { title: 'Menu 1: Dinner & Lunch', shortTitle: 'Menu 1: Dinner & Lunch', subtitle: 'Dinner ₹290 • Lunch ₹180', badge: '₹290/leaf' };
+      if (idx === 1) return { title: 'Menu 2: 4-Course Tariff', shortTitle: 'Menu 2: 4-Course Tariff', subtitle: 'Dinner ₹280 • Lunch ₹160', badge: '₹280/leaf' };
+      if (idx === 2) return { title: 'Menu 3: Evening High-Tea', shortTitle: 'Menu 3: Evening High-Tea', subtitle: 'Snacks ₹180 • Drinks ₹90', badge: '₹180/leaf' };
+      if (idx === 3) return { title: 'Menu 4: Mint Leaf Special', shortTitle: 'Menu 4: Mint Leaf Special', subtitle: 'Snacks ₹180 • B/F ₹160', badge: '₹180/leaf' };
+    }
+    return { title: `Card ${idx + 1}`, shortTitle: `Card ${idx + 1}`, subtitle: 'Official Tariff Sheet', badge: `Part ${idx + 1}` };
   };
 
   if (!service) {
@@ -153,26 +159,26 @@ export const ServiceDetailPage: React.FC = () => {
             onMouseLeave={() => setIsPaused(false)}
           >
             {/* Banner Header */}
-            <div className="bg-maroon-900 text-amber-200 px-4 py-2.5 flex items-center justify-between border-b border-gold/30">
-              <div className="flex items-center space-x-2">
+            <div className="bg-gradient-to-r from-maroon-950 via-maroon-900 to-maroon-950 text-amber-200 px-3.5 py-2 flex items-center justify-between border-b border-gold/30">
+              <div className="flex items-center space-x-2 min-w-0">
                 <Utensils className="w-3.5 h-3.5 text-gold shrink-0" />
-                <span className="font-serif text-xs sm:text-sm font-bold">
+                <span className="font-serif text-xs sm:text-sm font-bold text-amber-100 truncate">
                   Official Menu Card &amp; Package
                 </span>
                 {bannerImages.length > 1 && (
-                  <span className="ml-1 px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[10px] font-bold border border-gold/40">
+                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-gold/20 text-gold-light text-[10px] font-extrabold border border-gold/40">
                     {activeIdx + 1} of {bannerImages.length}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] sm:text-xs text-amber-300 font-tamil font-medium">
+              <span className="text-[10px] sm:text-xs text-amber-300 font-tamil font-medium shrink-0 ml-2">
                 அதிகாரப்பூர்வ மெனு கார்டு
               </span>
             </div>
 
-            {/* Sequence Selector Tabs (if multiple images) */}
+            {/* Sequence Selector Tabs (if multiple images) - Clean 2x2 Compact Grid */}
             {bannerImages.length > 1 && (
-              <div className="bg-amber-50/80 border-b border-gold/20 p-1.5 flex gap-1.5">
+              <div className="bg-amber-50/70 border-b border-gold/20 p-1.5 grid grid-cols-2 gap-1.5">
                 {bannerImages.map((_, idx) => {
                   const label = getCardLabel(idx);
                   const isActive = activeIdx === idx;
@@ -181,27 +187,33 @@ export const ServiceDetailPage: React.FC = () => {
                       key={idx}
                       type="button"
                       onClick={() => setActiveIdx(idx)}
-                      className={`flex-1 py-1.5 px-2.5 rounded-lg text-left transition-all flex items-center justify-between ${
+                      className={`py-1.5 px-2 rounded-lg text-left transition-all flex items-center justify-between gap-1 border ${
                         isActive
-                          ? 'bg-maroon-800 text-amber-100 shadow-sm border border-gold/40'
-                          : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200'
+                          ? 'bg-maroon-800 text-amber-100 shadow-xs border-gold/60 ring-1 ring-gold/40'
+                          : 'bg-white hover:bg-stone-50 text-stone-700 border-stone-200 hover:border-stone-300'
                       }`}
                     >
-                      <div className="truncate">
-                        <p className="text-[11px] font-bold leading-tight truncate">
-                          {label.title}
-                        </p>
-                        <p className={`text-[9px] truncate ${isActive ? 'text-amber-300' : 'text-stone-400'}`}>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center space-x-1.5">
+                          <span
+                            className={`text-[9px] font-black px-1.5 py-0.5 rounded leading-none shrink-0 ${
+                              isActive ? 'bg-gold text-maroon-950' : 'bg-stone-100 text-stone-700'
+                            }`}
+                          >
+                            {idx + 1}
+                          </span>
+                          <p className="text-[10px] sm:text-[11px] font-bold leading-tight truncate">
+                            {label.shortTitle || label.title}
+                          </p>
+                        </div>
+                        <p
+                          className={`text-[9px] truncate font-medium mt-0.5 pl-4.5 ${
+                            isActive ? 'text-amber-200' : 'text-stone-500'
+                          }`}
+                        >
                           {label.subtitle}
                         </p>
                       </div>
-                      <span
-                        className={`text-[9px] font-extrabold ml-1 px-1.5 py-0.5 rounded ${
-                          isActive ? 'bg-gold/30 text-gold-light' : 'bg-stone-200 text-stone-600'
-                        }`}
-                      >
-                        {idx + 1}
-                      </span>
                     </button>
                   );
                 })}
@@ -277,55 +289,6 @@ export const ServiceDetailPage: React.FC = () => {
                 </div>
               )}
             </div>
-
-            {/* Bottom Sequence Previews Strip */}
-            {bannerImages.length > 1 && (
-              <div className="bg-stone-50 border-t border-stone-200 p-2.5">
-                <div className="flex items-center justify-between mb-1.5 px-0.5">
-                  <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
-                    Package Sequence (Click to Switch)
-                  </span>
-                  <span className="text-[10px] text-maroon-700 font-semibold font-tamil">
-                    வரிசைப்படி பார்க்க
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {bannerImages.map((imgSrc, idx) => {
-                    const label = getCardLabel(idx);
-                    const isActive = activeIdx === idx;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setActiveIdx(idx)}
-                        className={`flex items-center space-x-2 p-1.5 rounded-xl border text-left transition-all ${
-                          isActive
-                            ? 'border-gold bg-amber-50/80 ring-2 ring-gold/40 shadow-xs'
-                            : 'border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50'
-                        }`}
-                      >
-                        <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-stone-100 border border-stone-200">
-                          <img src={imgSrc} alt={label.title} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center space-x-1">
-                            <span className="text-[9px] font-bold text-maroon-800">Part {idx + 1}:</span>
-                            <p className="text-[10px] font-bold text-charcoal truncate">{label.title}</p>
-                          </div>
-                          <span
-                            className={`text-[9px] font-medium ${
-                              isActive ? 'text-gold-dark font-bold' : 'text-stone-400'
-                            }`}
-                          >
-                            {isActive ? '● Currently Viewing' : 'Click to View'}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Real Feast & Setup Photo */}

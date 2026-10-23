@@ -13,17 +13,20 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { siteConfig } from '../../config/siteConfig';
-import { MEDIA_ASSETS } from '../../config/assets';
+import { MEDIA_ASSETS, MediaAsset } from '../../config/assets';
 import { CATERING_SERVICES } from '../../data/services';
 import { MENU_PACKAGES } from '../../data/menu';
 import { KolamDivider } from '../../components/common/KolamDivider';
 import { Badge } from '../../components/common/Badge';
 import { ServiceCard } from '../../components/cards/ServiceCard';
 import { MenuPackageCard } from '../../components/cards/MenuCard';
+import { MediaCard } from '../../components/cards/MediaCard';
+import { Modal } from '../../components/common/Modal';
 import { SEO } from '../../components/common/SEO';
 import { FAQSection } from '../../components/common/FAQSection';
 
 export const HomePage: React.FC = () => {
+  const [activeVideoModal, setActiveVideoModal] = useState<MediaAsset | null>(null);
   const [isCarouselScrolling, setIsCarouselScrolling] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -332,40 +335,23 @@ export const HomePage: React.FC = () => {
           <KolamDivider theme="leaf" className="my-2" />
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mt-6 sm:mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mt-6 sm:mt-10">
           {MEDIA_ASSETS.videos.map((vid) => (
-            <div
+            <MediaCard
               key={vid.id}
-              className="bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-stone-200 shadow-sm flex flex-col group"
-            >
-              <div className="relative aspect-[9/16] bg-black">
-                <video
-                  src={vid.src}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-2.5 sm:p-4 flex-1 flex flex-col justify-between">
-                <h3 className="font-serif font-bold text-xs sm:text-sm text-charcoal line-clamp-2">
-                  {vid.title}
-                </h3>
-                <p className="text-[10px] sm:text-xs text-stone-500 mt-1 line-clamp-2">
-                  {vid.description}
-                </p>
-              </div>
-            </div>
+              asset={vid}
+              onOpenLightbox={(asset) => setActiveVideoModal(asset)}
+            />
           ))}
         </div>
 
-        <div className="text-center mt-6">
+        <div className="text-center mt-8">
           <Link
             to="/gallery"
-            className="inline-flex items-center text-xs sm:text-sm font-bold text-maroon-800 hover:text-maroon-950 underline"
+            className="inline-flex items-center text-xs sm:text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 px-6 py-3 rounded-xl shadow-md transition-all"
           >
             <span>Open Full Gallery ({MEDIA_ASSETS.videos.length} Live Feasts &amp; Kitchen Reels)</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
           </Link>
         </div>
       </section>
@@ -530,6 +516,41 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Expanded Media Modal / Lightbox */}
+      {activeVideoModal && (
+        <Modal
+          isOpen={Boolean(activeVideoModal)}
+          onClose={() => setActiveVideoModal(null)}
+          title={activeVideoModal.title}
+          maxWidth="lg"
+        >
+          <div className="space-y-4">
+            <div className="relative aspect-[9/16] bg-black rounded-2xl overflow-hidden max-h-[75vh] mx-auto">
+              <video
+                src={activeVideoModal.src}
+                className="w-full h-full object-contain"
+                controls
+                autoPlay
+                playsInline
+              />
+            </div>
+            <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+              {activeVideoModal.description}
+            </p>
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {activeVideoModal.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[11px] px-2.5 py-1 rounded-md bg-stone-100 text-stone-700 font-medium"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

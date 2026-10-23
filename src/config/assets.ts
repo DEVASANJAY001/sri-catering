@@ -12,6 +12,7 @@ export interface MediaAsset {
   category: 'logo' | 'menu' | 'package' | 'wedding' | 'live-service' | 'qr';
   tags: string[];
   aspectRatio?: string;
+  images?: string[];
 }
 
 export const MEDIA_ASSETS: {
@@ -38,12 +39,18 @@ export const MEDIA_ASSETS: {
     {
       id: 'img-menu-card',
       type: 'image',
-      src: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.05 PM (1).jpeg',
-      title: 'Traditional 4-Tier Catering Menu Card',
-      description: 'Authentic South Indian Breakfast, Lunch, Dinner & Evening Snack meal sets with traditional per-leaf rates.',
+      src: '/assets/images/catlog1.png',
+      images: [
+        '/assets/images/catlog1.png',
+        '/assets/images/catlog2.png',
+        '/assets/images/catlog3.png',
+        '/assets/images/catlog4.png',
+      ],
+      title: 'Traditional 4-Tier Catering Menu Cards (4 Sets)',
+      description: 'Authentic South Indian Breakfast, Lunch, Dinner & Evening Snack meal sets with traditional per-leaf rates (Dinner ₹280-₹290, Lunch ₹160-₹180, Snacks ₹180, B/F ₹160).',
       category: 'menu',
-      tags: ['Menu Card', 'Banana Leaf Meals', 'Breakfast', 'Dinner', 'Traditional Veg'],
-      aspectRatio: '3/4',
+      tags: ['Menu Card', 'Banana Leaf Meals', 'Breakfast', 'Dinner', 'Traditional Veg', 'Evening Snacks'],
+      aspectRatio: '2/3',
     },
     {
       id: 'img-mutton-biryani-pkg',
@@ -188,6 +195,26 @@ export const MEDIA_ASSETS: {
   ],
   videos: [
     {
+      id: 'vid-dinner-veg-1000pax-330k',
+      type: 'video',
+      src: '/assets/videos/WhatsApp Video 2026-10-21 at 9.42.30 PM.mp4',
+      title: 'Grand Royal Dinner Veg Feast (₹3,30,000 / 1000 Guests)',
+      description: 'Live VIP golden banquet service setup featuring authentic sweets, plated presentation, and complete dining arrangement for 1,000 guests in Chennai.',
+      category: 'live-service',
+      tags: ['Dinner Veg Menu', '1000 Pax', 'Royal Banquet', 'Wedding Dinner', 'Plated Feast'],
+      aspectRatio: '9/16',
+    },
+    {
+      id: 'vid-dinner-banana-leaf-250k',
+      type: 'video',
+      src: '/assets/videos/WhatsApp Video 2026-10-21 at 9.42.33 PM.mp4',
+      title: 'Traditional Banana Leaf Dinner Feast (₹2,50,000 / 1000 Guests)',
+      description: 'Authentic South Indian banana-leaf dining experience served by uniformed, gloved staff with purified bottled water and multi-course feast for 1,000 members.',
+      category: 'live-service',
+      tags: ['Banana Leaf Meal', '1000 Pax', 'Hygienic Service', 'Tamil Wedding Feast', 'Dinner Veg'],
+      aspectRatio: '9/16',
+    },
+    {
       id: 'vid-event-live-1',
       type: 'video',
       src: '/assets/videos/VID_20260701_195250_639.mp4',
@@ -225,26 +252,6 @@ export const MEDIA_ASSETS: {
       description: 'Uniformed service staff attending to guests with prompt, courteous Tamil hospitality and hygienic table management.',
       category: 'live-service',
       tags: ['Hospitality', 'Service Boys', 'Hall Atmosphere', 'Event Management'],
-      aspectRatio: '9/16',
-    },
-    {
-      id: 'vid-dinner-veg-1000pax-330k',
-      type: 'video',
-      src: '/assets/videos/WhatsApp Video 2026-10-21 at 9.42.30 PM.mp4',
-      title: 'Grand Royal Dinner Veg Feast (₹3,30,000 / 1000 Guests)',
-      description: 'Live VIP golden banquet service setup featuring authentic sweets, plated presentation, and complete dining arrangement for 1,000 guests in Chennai.',
-      category: 'live-service',
-      tags: ['Dinner Veg Menu', '1000 Pax', 'Royal Banquet', 'Wedding Dinner', 'Plated Feast'],
-      aspectRatio: '9/16',
-    },
-    {
-      id: 'vid-dinner-banana-leaf-250k',
-      type: 'video',
-      src: '/assets/videos/WhatsApp Video 2026-10-21 at 9.42.33 PM.mp4',
-      title: 'Traditional Banana Leaf Dinner Feast (₹2,50,000 / 1000 Guests)',
-      description: 'Authentic South Indian banana-leaf dining experience served by uniformed, gloved staff with purified bottled water and multi-course feast for 1,000 members.',
-      category: 'live-service',
-      tags: ['Banana Leaf Meal', '1000 Pax', 'Hygienic Service', 'Tamil Wedding Feast', 'Dinner Veg'],
       aspectRatio: '9/16',
     },
   ],

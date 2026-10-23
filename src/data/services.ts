@@ -183,7 +183,13 @@ export const CATERING_SERVICES: CateringServiceItem[] = [
     shortDescription: 'Pure, pious vegetarian prasadam preparation and large-scale bulk annadhanam cooked with sanctity.',
     fullDescription: 'Specialized bulk catering for temple kumbhabhishekam, annual car festivals, and devotional gatherings. Prepared strictly according to traditional sattvic rules without onion or garlic upon request, using pure cow ghee and traditional firewood cooking methods.',
     imageSrc: '/assets/images/services/temple-annadhanam.jpg',
-    menuCardImageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.05 PM (1).jpeg',
+    menuCardImageSrc: '/assets/images/catlog1.png',
+    menuCardImages: [
+      '/assets/images/catlog1.png',
+      '/assets/images/catlog2.png',
+      '/assets/images/catlog3.png',
+      '/assets/images/catlog4.png'
+    ],
     eventTypesSupported: ['Kumbhabhishekam', 'Mandala Pooja', 'Annadhanam', 'Sastha Preethi'],
     mealStyles: ['Bulk Leaf Annadhanam', 'Prasadam Distribution Boxes'],
     guestCountRange: '100 to 5,000+ Devotees',

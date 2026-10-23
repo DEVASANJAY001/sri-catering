@@ -11,6 +11,9 @@ import {
   CalendarCheck,
   Eye,
   Grid,
+  ChevronLeft,
+  ChevronRight,
+  Download,
 } from 'lucide-react';
 import { CATERING_SERVICES } from '../../data/services';
 import { MENU_PACKAGES, MENU_ITEMS, MENU_CATEGORIES } from '../../data/menu';
@@ -34,7 +37,12 @@ export const ServicesPage: React.FC = () => {
   const [selectedDietNorm, setSelectedDietNorm] = useState<'all' | 'pure-veg' | 'halal-non-veg'>('all');
   const [selectedServingNorm, setSelectedServingNorm] = useState<'all' | 'banana-leaf' | 'live-stall' | 'buffet'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [previewFlyer, setPreviewFlyer] = useState<{ src: string; title: string } | null>(null);
+  const [previewFlyer, setPreviewFlyer] = useState<{
+    src: string;
+    title: string;
+    images?: string[];
+    activeIndex?: number;
+  } | null>(null);
 
   const setTab = (tab: 'services' | 'all-menus') => {
     if (tab === 'all-menus') {
@@ -238,7 +246,9 @@ export const ServicesPage: React.FC = () => {
                 <MenuPackageCard
                   key={pkg.id}
                   pkg={pkg}
-                  onPreviewImage={(src, title) => setPreviewFlyer({ src, title })}
+                  onPreviewImage={(src, title, images, activeIndex) =>
+                    setPreviewFlyer({ src, title, images, activeIndex: activeIndex ?? 0 })
+                  }
                 />
               ))}
             </div>
@@ -521,23 +531,124 @@ export const ServicesPage: React.FC = () => {
           maxWidth="2xl"
         >
           <div className="space-y-4">
-            <div className="max-h-[75vh] overflow-auto rounded-xl border border-stone-200 bg-stone-900/5 p-2">
+            <div className="relative max-h-[70vh] overflow-hidden rounded-xl border border-stone-200 bg-stone-900/5 p-2 flex items-center justify-center group">
               <img
                 src={previewFlyer.src}
                 alt={previewFlyer.title}
-                className="w-full h-auto object-contain rounded-lg mx-auto"
+                key={previewFlyer.src}
+                className="max-h-[68vh] w-auto max-w-full object-contain rounded-lg mx-auto"
               />
+
+              {previewFlyer.images && previewFlyer.images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const prevIdx =
+                        ((previewFlyer.activeIndex ?? 0) - 1 + previewFlyer.images!.length) %
+                        previewFlyer.images!.length;
+                      setPreviewFlyer({
+                        ...previewFlyer,
+                        src: previewFlyer.images![prevIdx],
+                        activeIndex: prevIdx,
+                      });
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/75 hover:bg-gold hover:text-maroon-950 text-white border border-white/20 transition-all shadow-lg hover:scale-105 active:scale-95 z-10"
+                    aria-label="Previous flyer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextIdx =
+                        ((previewFlyer.activeIndex ?? 0) + 1) % previewFlyer.images!.length;
+                      setPreviewFlyer({
+                        ...previewFlyer,
+                        src: previewFlyer.images![nextIdx],
+                        activeIndex: nextIdx,
+                      });
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/75 hover:bg-gold hover:text-maroon-950 text-white border border-white/20 transition-all shadow-lg hover:scale-105 active:scale-95 z-10"
+                    aria-label="Next flyer"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center space-x-1.5 bg-black/60 px-2 py-0.5 rounded-full z-10">
+                    {previewFlyer.images.map((_, dotIdx) => (
+                      <button
+                        key={dotIdx}
+                        type="button"
+                        onClick={() =>
+                          setPreviewFlyer({
+                            ...previewFlyer,
+                            src: previewFlyer.images![dotIdx],
+                            activeIndex: dotIdx,
+                          })
+                        }
+                        className={`h-1.5 rounded-full transition-all ${
+                          (previewFlyer.activeIndex ?? 0) === dotIdx
+                            ? 'w-4 bg-gold'
+                            : 'w-1.5 bg-white/50'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-stone-500">
-                Official Published Catering Tariff Flyer
+
+            {/* Thumbnail selector if multiple */}
+            {previewFlyer.images && previewFlyer.images.length > 1 && (
+              <div className="flex items-center justify-center space-x-2">
+                {previewFlyer.images.map((imgSrc, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setPreviewFlyer({
+                        ...previewFlyer,
+                        src: imgSrc,
+                        activeIndex: idx,
+                      });
+                    }}
+                    className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
+                      (previewFlyer.activeIndex ?? 0) === idx
+                        ? 'border-gold ring-2 ring-gold/40 shadow-xs scale-105'
+                        : 'border-stone-200 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={imgSrc} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center justify-between text-xs text-stone-500">
+              <span>
+                {previewFlyer.images && previewFlyer.images.length > 1
+                  ? `Menu Card ${(previewFlyer.activeIndex ?? 0) + 1} of ${previewFlyer.images.length}`
+                  : 'Official Published Catering Tariff Flyer'}
               </span>
-              <Link
-                to={`/enquiry?service=${encodeURIComponent(previewFlyer.title)}`}
-                className="px-4 py-2 rounded-xl bg-maroon-800 text-white font-bold text-xs"
-              >
-                Enquire for this Package
-              </Link>
+              <div className="flex items-center space-x-3">
+                <a
+                  href={previewFlyer.src}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-maroon-800 hover:underline font-semibold"
+                >
+                  <Download className="w-3.5 h-3.5 mr-1" />
+                  Full Resolution
+                </a>
+                <Link
+                  to={`/enquiry?service=${encodeURIComponent(previewFlyer.title)}`}
+                  className="px-3 py-1.5 rounded-xl bg-maroon-800 text-white font-bold text-xs hover:bg-maroon-900 transition-colors shadow-xs"
+                >
+                  Enquire Now
+                </Link>
+              </div>
             </div>
           </div>
         </Modal>

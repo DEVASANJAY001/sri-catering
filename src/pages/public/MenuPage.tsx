@@ -219,14 +219,21 @@ export const MenuPage: React.FC = () => {
           <button
             onClick={() =>
               setPreviewImage({
-                src: MEDIA_ASSETS.images[1].src,
-                title: 'Official Sri Caterers 4-Tier Tariff Card (Breakfast, Lunch, Dinner, Snack)',
+                src: '/assets/images/catlog1.png',
+                title: 'Official Sri Caterers Multi-Course Tariff Cards (4 Menus)',
+                images: [
+                  '/assets/images/catlog1.png',
+                  '/assets/images/catlog2.png',
+                  '/assets/images/catlog3.png',
+                  '/assets/images/catlog4.png',
+                ],
+                activeIndex: 0,
               })
             }
             className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-200 shadow-2xs transition-all flex items-center space-x-1.5 cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5 text-amber-700" />
-            <span>Official Tariff Card</span>
+            <span>Official Tariff Cards (4 Menus)</span>
           </button>
         </div>
 
@@ -829,6 +836,12 @@ export const MenuPage: React.FC = () => {
                   if (idx === 0) return { title: 'Part 1: Package Flyer (₹1.98L)', subtitle: '600 Guests Overview' };
                   if (idx === 1) return { title: 'Part 2: Detailed Menu & Stalls', subtitle: 'Veg, Non-Veg & Add-ons' };
                 }
+                if (selectedPackageDetails.id === 'pkg-traditional-4tier-leaf' || selectedFlyers.length === 4) {
+                  if (idx === 0) return { title: 'Menu 1: Dinner & Lunch', subtitle: 'Dinner ₹290 • Lunch ₹180' };
+                  if (idx === 1) return { title: 'Menu 2: 4-Course Tariff', subtitle: 'Dinner ₹280 • Lunch ₹160' };
+                  if (idx === 2) return { title: 'Menu 3: Evening High-Tea', subtitle: 'Snacks ₹180 • Drinks ₹90' };
+                  if (idx === 3) return { title: 'Menu 4: Mint Leaf Special', subtitle: 'Snacks ₹180 • B/F ₹160' };
+                }
                 return { title: `Part ${idx + 1}`, subtitle: 'Official Menu Flyer' };
               };
 
@@ -838,7 +851,7 @@ export const MenuPage: React.FC = () => {
                   <div className="space-y-3">
                     {/* Flyer Switcher Tabs if multiple images */}
                     {selectedFlyers.length > 1 && (
-                      <div className="flex gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200">
+                      <div className={`grid ${selectedFlyers.length === 4 ? 'grid-cols-2' : 'grid-cols-2'} gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200`}>
                         {selectedFlyers.map((_, idx) => {
                           const label = getPackageFlyerLabel(idx);
                           const isActive = safeIndex === idx;
@@ -847,25 +860,33 @@ export const MenuPage: React.FC = () => {
                               key={idx}
                               type="button"
                               onClick={() => setPackageFlyerIndex(idx)}
-                              className={`flex-1 py-1 px-2 rounded-lg text-left transition-all flex items-center justify-between ${
+                              className={`py-1.5 px-2 rounded-lg text-left transition-all flex items-center justify-between gap-1 border ${
                                 isActive
-                                  ? 'bg-maroon-800 text-amber-100 shadow-xs border border-gold/40'
-                                  : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200'
+                                  ? 'bg-maroon-800 text-amber-100 shadow-xs border-gold/40'
+                                  : 'bg-white hover:bg-stone-50 text-stone-700 border-stone-200'
                               }`}
                             >
-                              <div className="truncate">
-                                <p className="text-[11px] font-bold truncate leading-tight">{label.title}</p>
-                                <p className={`text-[9px] truncate ${isActive ? 'text-amber-300' : 'text-stone-400'}`}>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center space-x-1.5">
+                                  <span
+                                    className={`text-[9px] font-black px-1.5 py-0.5 rounded leading-none shrink-0 ${
+                                      isActive ? 'bg-gold text-maroon-950' : 'bg-stone-100 text-stone-700'
+                                    }`}
+                                  >
+                                    {idx + 1}
+                                  </span>
+                                  <p className="text-[10px] sm:text-[11px] font-bold truncate leading-tight">
+                                    {label.title}
+                                  </p>
+                                </div>
+                                <p
+                                  className={`text-[9px] truncate font-medium mt-0.5 pl-4.5 ${
+                                    isActive ? 'text-amber-300' : 'text-stone-400'
+                                  }`}
+                                >
                                   {label.subtitle}
                                 </p>
                               </div>
-                              <span
-                                className={`text-[9px] font-extrabold ml-1 px-1.5 py-0.5 rounded ${
-                                  isActive ? 'bg-gold/30 text-gold-light' : 'bg-stone-200 text-stone-600'
-                                }`}
-                              >
-                                {idx + 1}
-                              </span>
                             </button>
                           );
                         })}
@@ -968,30 +989,29 @@ export const MenuPage: React.FC = () => {
 
                     {/* Thumbnail Switcher Strip */}
                     {selectedFlyers.length > 1 && (
-                      <div className="grid grid-cols-2 gap-2 pt-1">
+                      <div className={`grid ${selectedFlyers.length === 4 ? 'grid-cols-4' : 'grid-cols-2'} gap-1.5 pt-1`}>
                         {selectedFlyers.map((imgSrc, idx) => {
-                          const label = getPackageFlyerLabel(idx);
                           const isActive = safeIndex === idx;
                           return (
                             <button
                               key={idx}
                               type="button"
                               onClick={() => setPackageFlyerIndex(idx)}
-                              className={`flex items-center space-x-2 p-1.5 rounded-xl border text-left transition-all ${
+                              className={`p-1 rounded-xl border text-center transition-all flex flex-col items-center group/thumb ${
                                 isActive
-                                  ? 'border-gold bg-amber-50/80 ring-2 ring-gold/40 shadow-xs'
+                                  ? 'border-gold bg-amber-50/90 ring-2 ring-gold/40 shadow-xs'
                                   : 'border-stone-200 bg-white hover:border-stone-300'
                               }`}
                             >
-                              <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-stone-100 border border-stone-200">
-                                <img src={imgSrc} alt="" className="w-full h-full object-cover" />
+                              <div className="aspect-[3/4] w-full rounded-lg overflow-hidden shrink-0 bg-stone-100 border border-stone-200 mb-1">
+                                <img src={imgSrc} alt="" className="w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300" />
                               </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-[10px] font-bold text-charcoal truncate">{label.title}</p>
-                                <span className={`text-[8px] font-medium ${isActive ? 'text-gold-dark font-bold' : 'text-stone-400'}`}>
-                                  {isActive ? '● Active' : 'Switch'}
-                                </span>
-                              </div>
+                              <p className={`text-[9px] sm:text-[10px] font-bold truncate w-full ${isActive ? 'text-maroon-900 font-black' : 'text-stone-700'}`}>
+                                Menu {idx + 1}
+                              </p>
+                              <span className={`text-[8px] font-semibold truncate w-full block ${isActive ? 'text-gold-dark font-extrabold' : 'text-stone-400'}`}>
+                                {isActive ? '● Active' : 'Switch'}
+                              </span>
                             </button>
                           );
                         })}

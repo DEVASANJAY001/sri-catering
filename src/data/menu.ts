@@ -119,19 +119,25 @@ export const MENU_PACKAGES: MenuPackage[] = [
     name: 'Traditional 4-Tier Catering Tariff Card',
     tamilName: 'பாரம்பரிய 4 அடுக்கு கேட்டரிங் மெனு கார்டு (காலை, மதியம், மாலை, இரவு)',
     priceTag: 'Per Leaf Tariff Sets',
-    highlight: 'Breakfast, Lunch, Tiffin & Dinner Banana Leaf Sets',
-    description: 'Our traditional authentic 4-tier catering menu card with structured multi-course sets for auspicious family celebrations and wedding rituals.',
+    highlight: '4 Complete Menu Sets: Dinner ₹280-₹290, Lunch ₹160-₹180, Snacks ₹180',
+    description: 'Our authentic South Indian 4-tier catering menu cards featuring full multi-course meals: Royal Dinner (₹280/₹290), Traditional Lunch Feast (₹160/₹180), Evening Snacks (₹180), and Auspicious Breakfast (₹160).',
     category: 'tariff-card',
     dietaryNorm: 'pure-veg',
     features: [
-      'Tier 1 (Breakfast): Idli, Medu Vadai, Ghee Pongal, Poori Masala, Sambar, 3 Chutneys, Kumbakonam Filter Coffee',
-      'Tier 2 (Lunch): Traditional Banana Leaf Feast with 18+ items (Sweet, Vadai, Payasam, Poriyal, Kootu, Sambar, Rasam, Vatha Kuzhambu, Curd, Appalam, Pickle)',
-      'Tier 3 (Evening Tiffin): Hot Bajji, Mysore Bonda, White Chutney, Sundal, Filter Coffee & Tea',
-      'Tier 4 (Dinner): Chapathi, Veg Kuruma, Idiyappam, Veg Biryani / Bisibelebath, Onion Raitha'
+      'Menu Card 1 (Dinner ₹290 / Lunch ₹180 / B/F ₹160): Gulab Jamun, Veg Briyani, Chapathi, Vatha Kuzhambu, 3 Chutneys, Siruparupu Payasam & Leaf Meals',
+      'Menu Card 2 (Dinner ₹280 / Lunch ₹160 / B/F ₹160 / Snacks ₹160): Malai Chum Chum, Romali Roti, Paneer Butter Masala, Mushroom Briyani & Evening Bonda',
+      'Menu Card 3 (Snacks ₹180 / Drinks ₹90 / B/F ₹160): Hot Filter Coffee, Paniyaram, Medu Vada, Onion Pakoda, Jigarthanda & Horlicks/Boost Counters',
+      'Menu Card 4 (Snacks ₹180 / Drinks ₹90 / B/F ₹160): Mint Leaf Special Spread with hot evening snacks, coffee/tea & traditional breakfast'
     ],
     imageSrc: '/assets/images/packages/pkg-traditional-4tier-leaf.jpg',
-    flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.05 PM (1).jpeg',
-    badge: 'Traditional 4-Tier Tariff'
+    flyerImageSrc: '/assets/images/catlog1.png',
+    flyerImages: [
+      '/assets/images/catlog1.png',
+      '/assets/images/catlog2.png',
+      '/assets/images/catlog3.png',
+      '/assets/images/catlog4.png'
+    ],
+    badge: '4 Traditional Menu Cards'
   },
   {
     id: 'pkg-dinner-299',
