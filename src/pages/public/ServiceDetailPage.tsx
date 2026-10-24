@@ -84,7 +84,7 @@ export const ServiceDetailPage: React.FC = () => {
   };
 
   const getCardLabel = (idx: number) => {
-    if (service?.slug === 'a-to-z-wedding-service' || service?.slug === 'ac-wedding-hall') {
+    if (service?.slug === 'a-to-z-wedding-service') {
       if (idx === 0) return { title: 'Package Overview (₹1.98L)', shortTitle: '₹1.98L Package', subtitle: '600 Guests Overview', badge: 'Overview' };
       if (idx === 1) return { title: 'Menu & Inclusions List', shortTitle: 'Menu & Stalls', subtitle: 'Veg, Non-Veg & Stalls', badge: 'Inclusions' };
     }
@@ -229,7 +229,7 @@ export const ServiceDetailPage: React.FC = () => {
             >
               <img
                 src={bannerImages[activeIdx]}
-                alt={`${service.title} Official Menu Card - Part ${activeIdx + 1}`}
+                alt={bannerImages.length > 1 ? `${service.title} Official Menu Card - Part ${activeIdx + 1}` : `${service.title} Official Menu Card`}
                 key={bannerImages[activeIdx]}
                 className="w-full h-full object-contain rounded-xl transition-all duration-300 group-hover:scale-102"
               />
@@ -477,7 +477,7 @@ export const ServiceDetailPage: React.FC = () => {
             <div className="flex items-center space-x-2 min-w-0">
               <Utensils className="w-4 h-4 text-gold shrink-0" />
               <span className="font-serif font-bold text-sm sm:text-base text-gold truncate">
-                {service.title} - {getCardLabel(activeIdx).title}
+                {bannerImages.length > 1 ? `${service.title} - ${getCardLabel(activeIdx).title}` : `${service.title} - Official Menu Card`}
               </span>
               {bannerImages.length > 1 && (
                 <span className="text-xs text-amber-200/80 font-mono shrink-0 px-2 py-0.5 rounded-full bg-white/10">

@@ -35,11 +35,7 @@ export const CATERING_SERVICES: CateringServiceItem[] = [
     shortDescription: 'Celebrate in comfort and style with our fully air-conditioned wedding halls, designed to host your guests.',
     fullDescription: 'Celebrate in comfort and style with our fully air-conditioned wedding halls, designed to host your guests in Chennai (Villivakkam, Perambur, Kolathur, Anna Nagar & surrounding areas). Featuring spacious dining halls, crystal chandeliers, air-conditioned bridal suites, power backup, and full catering logistics.',
     imageSrc: '/assets/images/services/ac-wedding-hall.jpg',
-    menuCardImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
-    menuCardImages: [
-      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM (1).jpeg',
-      '/assets/images/WhatsApp Image 2026-10-11 at 1.23.00 PM.jpeg'
-    ],
+    menuCardImageSrc: '/assets/images/newbjhbj.png',
     eventTypesSupported: ['Wedding Reception', 'A/C Hall Banquet', 'Corporate Conclave', 'Engagement'],
     mealStyles: ['Centralized A/C Dining Hall', 'Seated Banana Leaf Service', 'Executive Buffet'],
     guestCountRange: '200 to 2,500+ Guests',
@@ -61,7 +57,7 @@ export const CATERING_SERVICES: CateringServiceItem[] = [
     shortDescription: 'Grand royal wedding banquets featuring authentic plantain-leaf feasts, traditional sweets, and slow-cooked wood-fire dum biryani.',
     fullDescription: 'Our signature Tamil wedding catering blends centuries-old South Indian wedding culinary traditions with royal presentation. From auspicious early morning Muhurtham breakfast to the grand evening reception banquet, our culinary team and uniformed service staff deliver an unforgettable feast for your guests.',
     imageSrc: '/assets/images/services/wedding-catering.jpg',
-    menuCardImageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.30.46 PM.jpeg',
+    menuCardImageSrc: '/assets/images/BHHBHJBJH.jpeg',
     eventTypesSupported: ['Wedding (திருமணம்)', 'Muhurtham', 'Reception (வரவேற்பு)'],
     mealStyles: ['Traditional Banana Leaf (இலை சாப்பாடு)', 'Royal Buffet', 'Live Chef Counters'],
     guestCountRange: '200 to 3,000+ Guests',
