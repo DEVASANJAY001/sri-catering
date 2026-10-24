@@ -16,6 +16,7 @@ import { MEDIA_ASSETS } from '../../config/assets';
 import { KolamDivider } from '../../components/common/KolamDivider';
 import { Badge } from '../../components/common/Badge';
 import { SEO } from '../../components/common/SEO';
+import { GoogleMapLocationWindow } from '../../components/common/GoogleMapLocationWindow';
 
 export const ContactPage: React.FC = () => {
   return (
@@ -133,7 +134,20 @@ export const ContactPage: React.FC = () => {
                 <p className="text-sm text-stone-700 font-medium mt-1">
                   {siteConfig.locations.fullAddress}
                 </p>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+                <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-stone-500">
+                  <span className="font-mono bg-stone-100 px-2 py-0.5 rounded border border-stone-200">
+                    GPS: {siteConfig.locations.coordinates}
+                  </span>
+                  <a
+                    href={siteConfig.locations.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-maroon-800 hover:text-maroon-950 underline inline-flex items-center"
+                  >
+                    <span>View on Google Map</span>
+                  </a>
+                </div>
+                <p className="text-xs text-stone-500 mt-2 leading-relaxed">
                   <strong>Service Coverage:</strong> {siteConfig.locations.coverage}
                 </p>
               </div>
@@ -152,49 +166,10 @@ export const ContactPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Google Maps Placeholder & Social QR Card */}
+        {/* Right Column: Google Maps Interactive Window & Social QR Card */}
         <div className="lg:col-span-5 space-y-6">
-          {/* Map Embed Container */}
-          <div className="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm flex flex-col">
-            <div className="p-4 bg-stone-50 border-b border-stone-200 flex items-center justify-between">
-              <span className="text-xs font-bold text-stone-700 uppercase tracking-wider flex items-center">
-                <MapPin className="w-3.5 h-3.5 mr-1 text-maroon-800" />
-                Chennai Service Map
-              </span>
-              <a
-                href="https://maps.google.com/?q=Villivakkam+Perambur+Chennai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-maroon-800 font-bold hover:underline"
-              >
-                Open in Google Maps
-              </a>
-            </div>
-
-            {/* Interactive Map Visual Placeholder */}
-            <div className="relative aspect-[4/3] bg-stone-200 flex flex-col items-center justify-center p-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-maroon-800 text-white flex items-center justify-center shadow-lg mb-3">
-                <MapPin className="w-8 h-8 text-gold" />
-              </div>
-              <h4 className="font-serif font-bold text-base text-charcoal">
-                Sri Caterers Central Base
-              </h4>
-              <p className="text-xs text-stone-600 mt-1 max-w-xs">
-                Villivakkam &amp; Perambur, Chennai, Tamil Nadu 600049 / 600011
-              </p>
-              <div className="mt-4">
-                <a
-                  href="https://maps.google.com/?q=Villivakkam+Chennai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 rounded-xl bg-white text-charcoal border border-stone-300 text-xs font-bold shadow-xs hover:bg-stone-50 transition-colors"
-                >
-                  <Navigation className="w-3.5 h-3.5 mr-1.5 text-maroon-800" />
-                  Get Driving Directions
-                </a>
-              </div>
-            </div>
-          </div>
+          {/* Interactive Google Map Location Window with Zoom & Move */}
+          <GoogleMapLocationWindow heightClassName="h-[350px] sm:h-[380px]" />
 
           {/* Social Instagram Card - Responsive */}
           <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-4 sm:p-6 border border-amber-200 shadow-sm flex flex-col sm:flex-row items-center sm:items-start space-y-3 sm:space-y-0 sm:space-x-5 text-center sm:text-left">

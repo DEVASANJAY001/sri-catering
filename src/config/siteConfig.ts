@@ -24,6 +24,11 @@ export const siteConfig = {
     state: "Tamil Nadu",
     pincode: "600049 / 600011",
     fullAddress: "Villivakkam & Perambur Hub, Chennai, Tamil Nadu, India",
+    coordinates: "13°06'40.4\"N 80°15'31.2\"E",
+    lat: 13.1112072,
+    lng: 80.2586718,
+    googleMapsUrl: "https://www.google.com/maps/place/13%C2%B006'40.4%22N+80%C2%B015'31.2%22E/@13.1112072,80.2560969,17z/data=!3m1!4b1!4m4!3m3!8m2!3d13.1112072!4d80.2586718?entry=ttu",
+    directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=13.1112072,80.2586718",
     coverage: "Chennai Metropolitan, Tiruvallur, Kanchipuram, Chengalpattu, Vellore & destination weddings across Tamil Nadu"
   },
 
