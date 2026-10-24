@@ -286,7 +286,7 @@ export const HomePage: React.FC = () => {
             <div
               ref={carouselRef}
               onScroll={handleCarouselScroll}
-              className="flex overflow-x-auto snap-x snap-mandatory space-x-3 sm:space-x-6 pb-4 pt-1 px-1 sm:px-2 scroll-smooth"
+              className="flex overflow-x-auto snap-x snap-mandatory space-x-3 sm:space-x-6 pb-4 pt-1 px-1 sm:px-2 scroll-smooth items-stretch"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {MENU_PACKAGES.map((pkg) => (
