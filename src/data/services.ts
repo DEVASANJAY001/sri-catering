@@ -183,8 +183,7 @@ export const CATERING_SERVICES: CateringServiceItem[] = [
     menuCardImages: [
       '/assets/images/catlog1.png',
       '/assets/images/catlog2.png',
-      '/assets/images/catlog3.png',
-      '/assets/images/catlog4.png'
+      '/assets/images/catlog3.png'
     ],
     eventTypesSupported: ['Kumbhabhishekam', 'Mandala Pooja', 'Annadhanam', 'Sastha Preethi'],
     mealStyles: ['Bulk Leaf Annadhanam', 'Prasadam Distribution Boxes'],

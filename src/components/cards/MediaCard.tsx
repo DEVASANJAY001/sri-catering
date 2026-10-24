@@ -135,24 +135,24 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-stone-950/80 via-stone-950/30 to-transparent pointer-events-none" />
 
         {/* Top Badges & Audio Control */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
-          <Badge variant="maroon" size="sm" className="shadow-md backdrop-blur-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-1.5" />
-            <span>Live Reel</span>
+        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex items-center justify-between z-10 pointer-events-none">
+          <Badge variant="maroon" size="sm" className="shadow-md backdrop-blur-xs text-[9px] sm:text-xs px-1.5 sm:px-2 py-0.5">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse mr-1 sm:mr-1.5" />
+            <span className="text-[9px] sm:text-xs">Live Reel</span>
           </Badge>
 
-          <div className="flex items-center space-x-1.5 pointer-events-auto">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 pointer-events-auto">
             {/* Audio State Toggle Button */}
             <button
               type="button"
               onClick={handleToggleMute}
-              className="p-2 rounded-full bg-stone-950/75 border border-white/20 text-white hover:bg-stone-900 transition-all shadow-md active:scale-95"
+              className="p-1.5 sm:p-2 rounded-full bg-stone-950/75 border border-white/20 text-white hover:bg-stone-900 transition-all shadow-md active:scale-95"
               aria-label={isMuted ? 'Tap to Unmute' : 'Tap to Mute'}
             >
               {isMuted ? (
-                <VolumeX className="w-4 h-4 text-amber-300" />
+                <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300" />
               ) : (
-                <Volume2 className="w-4 h-4 text-emerald-400" />
+                <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
               )}
             </button>
 
@@ -164,10 +164,10 @@ export const MediaCard: React.FC<MediaCardProps> = ({
                   e.stopPropagation();
                   onOpenLightbox(asset);
                 }}
-                className="p-2 rounded-full bg-stone-950/75 border border-white/20 text-white hover:bg-stone-900 transition-all shadow-md active:scale-95"
+                className="p-1.5 sm:p-2 rounded-full bg-stone-950/75 border border-white/20 text-white hover:bg-stone-900 transition-all shadow-md active:scale-95"
                 aria-label="Expand video"
               >
-                <Maximize2 className="w-4 h-4" />
+                <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             )}
           </div>
@@ -198,26 +198,26 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         {/* ============================================================== */}
         {/* BLACK SHADE ENDING: Gradient at bottom with 1-line description */}
         {/* ============================================================== */}
-        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/85 to-transparent pt-16 pb-3.5 px-3.5 sm:px-4 z-10 pointer-events-none">
-          <div className="space-y-1">
+        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/85 to-transparent pt-12 sm:pt-16 pb-2.5 sm:pb-3.5 px-2.5 sm:px-4 z-10 pointer-events-none">
+          <div className="space-y-0.5 sm:space-y-1">
             {/* Title in Reel */}
-            <h4 className="font-serif font-bold text-xs sm:text-sm text-white truncate drop-shadow-md">
+            <h4 className="font-serif font-bold text-[11px] sm:text-sm text-white truncate drop-shadow-md">
               {asset.title}
             </h4>
 
             {/* Description in ONE LINE inside the black shade */}
-            <p className="text-[11px] sm:text-xs text-stone-200 truncate font-light drop-shadow-xs">
+            <p className="text-[10px] sm:text-xs text-stone-200 truncate font-light drop-shadow-xs">
               {asset.description}
             </p>
 
             {/* Reel Status & Progress */}
-            <div className="flex items-center justify-between text-[10px] text-amber-300 font-medium pt-1">
+            <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-amber-300 font-medium pt-0.5 sm:pt-1">
               <span className="flex items-center">
                 <Sparkles className="w-2.5 h-2.5 mr-1 text-gold" />
-                <span>Tap to {isPlaying ? 'pause' : 'play'}</span>
+                <span className="truncate">Tap {isPlaying ? 'pause' : 'play'}</span>
               </span>
-              <span className="text-stone-400 text-[10px]">
-                {isMuted ? 'Muted' : 'Audio On'}
+              <span className="text-stone-400 text-[9px] sm:text-[10px] shrink-0">
+                {isMuted ? 'Muted' : 'Sound On'}
               </span>
             </div>
 
@@ -235,14 +235,14 @@ export const MediaCard: React.FC<MediaCardProps> = ({
       {/* ============================================================== */}
       {/* 2. OUT OF THE VIDEO: Only Keep Enquiry Button                   */}
       {/* ============================================================== */}
-      <div className="p-3 sm:p-4 bg-white">
+      <div className="p-2 sm:p-4 bg-white">
         <Link
           to={`/enquiry?service=${encodeURIComponent(asset.title)}`}
-          className="w-full inline-flex items-center justify-center text-xs font-bold px-3 py-2.5 rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white transition-all text-center shadow-sm active:scale-98"
+          className="w-full inline-flex items-center justify-center text-[11px] sm:text-xs font-bold px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg sm:rounded-xl bg-maroon-800 hover:bg-maroon-900 text-white transition-all text-center shadow-xs sm:shadow-sm active:scale-98"
         >
-          <CalendarCheck className="w-3.5 h-3.5 mr-1.5 text-gold" />
-          <span>Enquire for Similar Setup</span>
-          <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          <CalendarCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 sm:mr-1.5 text-gold shrink-0" />
+          <span className="truncate">Enquire for Similar Setup</span>
+          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1 shrink-0 hidden sm:inline" />
         </Link>
       </div>
     </div>

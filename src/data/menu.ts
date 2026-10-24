@@ -62,7 +62,7 @@ export const MENU_PACKAGES: MenuPackage[] = [
       'Grand Veg Menu: Jamun, Chapathi, Paneer Butter Masala, Mini Thattu Idly, Mini Uthappam, Sambar, Veg Kuruma, Curd Rice, Bisibelebath, Bhagalabath, Rice, Rasam, Appalam, Pickle',
       'Complete Service Staff: Uniformed service boys, banana leaves, roll paper, bottled water (300ml)'
     ],
-    imageSrc: '/assets/images/packages/pkg-wedding-royal-175k.jpg',
+    imageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.30.46 PM.jpeg',
     flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.30.46 PM.jpeg',
     badge: 'Grand Wedding Special'
   },
@@ -117,27 +117,25 @@ export const MENU_PACKAGES: MenuPackage[] = [
   {
     id: 'pkg-traditional-4tier-leaf',
     name: 'Traditional 4-Tier Catering Tariff Card',
-    tamilName: 'பாரம்பரிய 4 அடுக்கு கேட்டரிங் மெனு கார்டு (காலை, மதியம், மாலை, இரவு)',
+    tamilName: 'பாரம்பரிய கேட்டரிங் மெனு கார்டுகள் (காலை, மதியம், இரவு)',
     priceTag: 'Per Leaf Tariff Sets',
-    highlight: '4 Complete Menu Sets: Dinner ₹280-₹290, Lunch ₹160-₹180, Snacks ₹180',
-    description: 'Our authentic South Indian 4-tier catering menu cards featuring full multi-course meals: Royal Dinner (₹280/₹290), Traditional Lunch Feast (₹160/₹180), Evening Snacks (₹180), and Auspicious Breakfast (₹160).',
+    highlight: '3 Complete Menu Sets: Dinner ₹280-₹290, Lunch ₹160-₹180, Snacks ₹180',
+    description: 'Our authentic South Indian multi-tier catering menu cards featuring full multi-course meals: Royal Dinner (₹280/₹290), Traditional Lunch Feast (₹160/₹180), and Evening Snacks (₹180).',
     category: 'tariff-card',
     dietaryNorm: 'pure-veg',
     features: [
       'Menu Card 1 (Dinner ₹290 / Lunch ₹180 / B/F ₹160): Gulab Jamun, Veg Briyani, Chapathi, Vatha Kuzhambu, 3 Chutneys, Siruparupu Payasam & Leaf Meals',
       'Menu Card 2 (Dinner ₹280 / Lunch ₹160 / B/F ₹160 / Snacks ₹160): Malai Chum Chum, Romali Roti, Paneer Butter Masala, Mushroom Briyani & Evening Bonda',
-      'Menu Card 3 (Snacks ₹180 / Drinks ₹90 / B/F ₹160): Hot Filter Coffee, Paniyaram, Medu Vada, Onion Pakoda, Jigarthanda & Horlicks/Boost Counters',
-      'Menu Card 4 (Snacks ₹180 / Drinks ₹90 / B/F ₹160): Mint Leaf Special Spread with hot evening snacks, coffee/tea & traditional breakfast'
+      'Menu Card 3 (Snacks ₹180 / Drinks ₹90 / B/F ₹160): Hot Filter Coffee, Paniyaram, Medu Vada, Onion Pakoda, Jigarthanda & Horlicks/Boost Counters'
     ],
     imageSrc: '/assets/images/packages/pkg-traditional-4tier-leaf.jpg',
     flyerImageSrc: '/assets/images/catlog1.png',
     flyerImages: [
       '/assets/images/catlog1.png',
       '/assets/images/catlog2.png',
-      '/assets/images/catlog3.png',
-      '/assets/images/catlog4.png'
+      '/assets/images/catlog3.png'
     ],
-    badge: '4 Traditional Menu Cards'
+    badge: '3 Traditional Menu Cards'
   },
   {
     id: 'pkg-dinner-299',

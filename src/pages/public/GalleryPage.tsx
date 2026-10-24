@@ -67,7 +67,7 @@ export const GalleryPage: React.FC = () => {
       </div>
 
       {/* 3. Auto-Playing Reels Grid (2 Columns on mobile & tablet, 4 on desktop) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
         {videoAssets.map((asset) => (
           <MediaCard
             key={asset.id}

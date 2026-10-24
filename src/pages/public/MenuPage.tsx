@@ -220,12 +220,11 @@ export const MenuPage: React.FC = () => {
             onClick={() =>
               setPreviewImage({
                 src: '/assets/images/catlog1.png',
-                title: 'Official Sri Caterers Multi-Course Tariff Cards (4 Menus)',
+                title: 'Official Sri Caterers Multi-Course Tariff Cards (3 Menus)',
                 images: [
                   '/assets/images/catlog1.png',
                   '/assets/images/catlog2.png',
                   '/assets/images/catlog3.png',
-                  '/assets/images/catlog4.png',
                 ],
                 activeIndex: 0,
               })
@@ -233,7 +232,7 @@ export const MenuPage: React.FC = () => {
             className="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-200 shadow-2xs transition-all flex items-center space-x-1.5 cursor-pointer"
           >
             <Eye className="w-3.5 h-3.5 text-amber-700" />
-            <span>Official Tariff Cards (4 Menus)</span>
+            <span>Official Tariff Cards (3 Menus)</span>
           </button>
         </div>
 
@@ -836,11 +835,10 @@ export const MenuPage: React.FC = () => {
                   if (idx === 0) return { title: 'Part 1: Package Flyer (₹1.98L)', subtitle: '600 Guests Overview' };
                   if (idx === 1) return { title: 'Part 2: Detailed Menu & Stalls', subtitle: 'Veg, Non-Veg & Add-ons' };
                 }
-                if (selectedPackageDetails.id === 'pkg-traditional-4tier-leaf' || selectedFlyers.length === 4) {
+                if (selectedPackageDetails.id === 'pkg-traditional-4tier-leaf' || selectedFlyers.length === 3 || selectedFlyers.length === 4) {
                   if (idx === 0) return { title: 'Menu 1: Dinner & Lunch', subtitle: 'Dinner ₹290 • Lunch ₹180' };
                   if (idx === 1) return { title: 'Menu 2: 4-Course Tariff', subtitle: 'Dinner ₹280 • Lunch ₹160' };
                   if (idx === 2) return { title: 'Menu 3: Evening High-Tea', subtitle: 'Snacks ₹180 • Drinks ₹90' };
-                  if (idx === 3) return { title: 'Menu 4: Mint Leaf Special', subtitle: 'Snacks ₹180 • B/F ₹160' };
                 }
                 return { title: `Part ${idx + 1}`, subtitle: 'Official Menu Flyer' };
               };
@@ -851,7 +849,7 @@ export const MenuPage: React.FC = () => {
                   <div className="space-y-3">
                     {/* Flyer Switcher Tabs if multiple images */}
                     {selectedFlyers.length > 1 && (
-                      <div className={`grid ${selectedFlyers.length === 4 ? 'grid-cols-2' : 'grid-cols-2'} gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200`}>
+                      <div className={`grid ${selectedFlyers.length === 3 ? 'grid-cols-3' : 'grid-cols-2'} gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200`}>
                         {selectedFlyers.map((_, idx) => {
                           const label = getPackageFlyerLabel(idx);
                           const isActive = safeIndex === idx;

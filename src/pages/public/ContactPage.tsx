@@ -134,10 +134,7 @@ export const ContactPage: React.FC = () => {
                 <p className="text-sm text-stone-700 font-medium mt-1">
                   {siteConfig.locations.fullAddress}
                 </p>
-                <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-stone-500">
-                  <span className="font-mono bg-stone-100 px-2 py-0.5 rounded border border-stone-200">
-                    GPS: {siteConfig.locations.coordinates}
-                  </span>
+                <div className="mt-1.5 text-xs text-stone-500">
                   <a
                     href={siteConfig.locations.googleMapsUrl}
                     target="_blank"

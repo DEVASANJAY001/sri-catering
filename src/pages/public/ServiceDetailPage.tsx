@@ -88,11 +88,10 @@ export const ServiceDetailPage: React.FC = () => {
       if (idx === 0) return { title: 'Package Overview (₹1.98L)', shortTitle: '₹1.98L Package', subtitle: '600 Guests Overview', badge: 'Overview' };
       if (idx === 1) return { title: 'Menu & Inclusions List', shortTitle: 'Menu & Stalls', subtitle: 'Veg, Non-Veg & Stalls', badge: 'Inclusions' };
     }
-    if (service?.slug === 'temple-religious-functions' || service?.menuCardImages?.length === 4) {
+    if (service?.slug === 'temple-religious-functions' || service?.menuCardImages?.length === 3 || service?.menuCardImages?.length === 4) {
       if (idx === 0) return { title: 'Menu 1: Dinner & Lunch', shortTitle: 'Menu 1: Dinner & Lunch', subtitle: 'Dinner ₹290 • Lunch ₹180', badge: '₹290/leaf' };
       if (idx === 1) return { title: 'Menu 2: 4-Course Tariff', shortTitle: 'Menu 2: 4-Course Tariff', subtitle: 'Dinner ₹280 • Lunch ₹160', badge: '₹280/leaf' };
       if (idx === 2) return { title: 'Menu 3: Evening High-Tea', shortTitle: 'Menu 3: Evening High-Tea', subtitle: 'Snacks ₹180 • Drinks ₹90', badge: '₹180/leaf' };
-      if (idx === 3) return { title: 'Menu 4: Mint Leaf Special', shortTitle: 'Menu 4: Mint Leaf Special', subtitle: 'Snacks ₹180 • B/F ₹160', badge: '₹180/leaf' };
     }
     return { title: `Card ${idx + 1}`, shortTitle: `Card ${idx + 1}`, subtitle: 'Official Tariff Sheet', badge: `Part ${idx + 1}` };
   };
@@ -176,9 +175,9 @@ export const ServiceDetailPage: React.FC = () => {
               </span>
             </div>
 
-            {/* Sequence Selector Tabs (if multiple images) - Clean 2x2 Compact Grid */}
+            {/* Sequence Selector Tabs (if multiple images) - Clean Compact Grid */}
             {bannerImages.length > 1 && (
-              <div className="bg-amber-50/70 border-b border-gold/20 p-1.5 grid grid-cols-2 gap-1.5">
+              <div className={`bg-amber-50/70 border-b border-gold/20 p-1.5 grid ${bannerImages.length === 3 ? 'grid-cols-3' : 'grid-cols-2'} gap-1.5`}>
                 {bannerImages.map((_, idx) => {
                   const label = getCardLabel(idx);
                   const isActive = activeIdx === idx;
