@@ -66,25 +66,7 @@ export const MENU_PACKAGES: MenuPackage[] = [
     flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.30.46 PM.jpeg',
     badge: 'Grand Wedding Special'
   },
-  {
-    id: 'pkg-wedding-flyer-breakdown',
-    name: 'Complete Wedding & Live Stalls Lineup Package',
-    tamilName: 'திருமண மெனு & நேரடி ஸ்டால்கள் முழு பட்டியல்',
-    priceTag: 'Full Wedding Lineup',
-    highlight: '5 Live Stalls + Dum Biryani + 14 Veg Feasts',
-    description: 'Comprehensive wedding event breakdown with dedicated live mojito & tea stations, wood-fire dum biryani, and full traditional banana leaf meal courses.',
-    category: 'wedding-grand',
-    dietaryNorm: 'all',
-    features: [
-      'Live Stalls: Mojito live, Tea & Coffee machine, Fruit salad, Ice cream (Mukkani), Beeda counter',
-      'Non-Veg Lineup: Wood Fire Mutton Biryani, Chicken 65, Chicken gravy, Idiyappam, Meetha khana, Firni, Naan, Brinjal, Raitha',
-      'Veg Lineup: Jamun, Chapathi, Paneer Butter Masala, Mini Thattu Idly, Mini Uthappam, Sambar, Veg Kuruma, Curd Rice, Bisibelebath, Bhagalabath, Appalam, Pickle',
-      'Service Amenities: Clean Banana leaves, Packaged water 300ml, Roll paper, Dedicated service boys'
-    ],
-    imageSrc: '/assets/images/packages/pkg-wedding-flyer-breakdown.jpg',
-    flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.22.11 PM.jpeg',
-    badge: 'Verified Menu Flyer'
-  },
+
   {
     id: 'pkg-mega-600pax-198k',
     name: 'Mega Wedding Celebration Package (600 Guests)',
