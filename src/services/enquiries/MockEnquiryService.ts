@@ -15,7 +15,7 @@ export class MockEnquiryService implements EnquiryService {
       if (!raw) return [];
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        return parsed.filter((i) => !i.id?.startsWith('ENQ-2026-100'));
+        return parsed;
       }
       return [];
     } catch {

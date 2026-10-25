@@ -15,7 +15,16 @@ export const PublicLayout: React.FC = () => {
     const timer = setTimeout(() => {
       firebaseTrafficService.recordPageView(pathname);
     }, 250);
-    return () => clearTimeout(timer);
+
+    // Periodic heartbeat to keep presence indicator active while browsing
+    const heartbeatInterval = setInterval(() => {
+      firebaseTrafficService.recordHeartbeat();
+    }, 60000);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(heartbeatInterval);
+    };
   }, [pathname]);
 
   return (

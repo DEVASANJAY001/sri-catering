@@ -28,6 +28,7 @@ import { Enquiry } from '../../types/enquiry';
 import { KolamDivider } from '../../components/common/KolamDivider';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
+import { firebaseTrafficService } from '../../services/analytics/FirebaseTrafficService';
 import { SEO } from '../../components/common/SEO';
 
 export const EnquiryPage: React.FC = () => {
@@ -102,6 +103,7 @@ export const EnquiryPage: React.FC = () => {
       });
 
       setSubmittedEnquiry(created);
+      firebaseTrafficService.recordEvent('enquiry_submitted', `Enquiry for ${data.eventType || 'Event'}`);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: unknown) {
       const errorMsg =

@@ -2,6 +2,8 @@ import React from 'react';
 import { MessageCircle, Phone } from 'lucide-react';
 import { siteConfig } from '../../config/siteConfig';
 
+import { firebaseTrafficService } from '../../services/analytics/FirebaseTrafficService';
+
 export const FloatingWhatsApp: React.FC = () => {
   return (
     <div className="fixed bottom-5 right-4 z-50 flex flex-col items-end space-y-2 select-none print:hidden transform-gpu">
@@ -10,6 +12,7 @@ export const FloatingWhatsApp: React.FC = () => {
         {/* Quick Call Button (mobile priority) */}
         <a
           href={`tel:${siteConfig.rawPhone}`}
+          onClick={() => firebaseTrafficService.recordEvent('call_click', 'Floating Call Button')}
           aria-label="Call Sri Caterers"
           className="sm:hidden w-11 h-11 rounded-full bg-stone-900 text-white flex items-center justify-center shadow-lg hover:bg-black active:scale-95 transition-all border border-stone-700"
         >
@@ -21,6 +24,7 @@ export const FloatingWhatsApp: React.FC = () => {
           href={siteConfig.whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => firebaseTrafficService.recordEvent('whatsapp_click', 'Floating WhatsApp Button')}
           aria-label="Chat directly on WhatsApp"
           className="group flex items-center space-x-2 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white font-bold text-xs sm:text-sm pl-3 sm:pl-4 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-white/80"
         >

@@ -35,8 +35,7 @@ export class FirebaseEnquiryService implements EnquiryService {
       if (!raw) return [];
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        // Exclude any legacy mock items starting with ENQ-2026-100
-        return parsed.filter((i) => !i.id?.startsWith('ENQ-2026-100'));
+        return parsed;
       }
       return [];
     } catch {
@@ -112,8 +111,7 @@ export class FirebaseEnquiryService implements EnquiryService {
       const querySnapshot = await getDocs(collection(db, 'enquiries'));
       if (!querySnapshot.empty) {
         items = querySnapshot.docs
-          .map((docSnap) => docSnap.data() as Enquiry)
-          .filter((i) => !i.id?.startsWith('ENQ-2026-100')); // Exclude legacy mock items
+          .map((docSnap) => docSnap.data() as Enquiry);
         // Sort descending by created date
         items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.setLocalCache(items);
@@ -450,9 +448,7 @@ export class FirebaseEnquiryService implements EnquiryService {
             const list: Enquiry[] = [];
             snapshot.forEach((d) => {
               const item = d.data() as Enquiry;
-              if (!item.id?.startsWith('ENQ-2026-100')) {
-                list.push(item);
-              }
+              list.push(item);
             });
             this.setLocalCache(list);
             callback(list);
