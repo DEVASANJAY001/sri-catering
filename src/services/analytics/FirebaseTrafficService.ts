@@ -36,7 +36,7 @@ export interface TrafficStats {
 
 const TRAFFIC_DOC_PATH = 'analytics';
 const TRAFFIC_DOC_ID = 'traffic';
-const LOCAL_STORAGE_CACHE_KEY = 'sri_traffic_cache';
+const LOCAL_STORAGE_CACHE_KEY = 'sri_traffic_cache_clean';
 
 const DEFAULT_TRAFFIC_STATS: TrafficStats = {
   totalVisits: 0,
@@ -66,11 +66,15 @@ class FirebaseTrafficService {
 
   private initLocalCache() {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('sri_traffic_cache');
+        localStorage.removeItem('sri_traffic_cache_v2');
+      }
       const raw = localStorage.getItem(LOCAL_STORAGE_CACHE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
         if (
-          parsed.totalVisits === 1420 ||
+          parsed.totalVisits >= 500 ||
           parsed.recentVisitors?.some((v: { id?: string }) => v.id === 'vis-1')
         ) {
           localStorage.removeItem(LOCAL_STORAGE_CACHE_KEY);
@@ -138,10 +142,9 @@ class FirebaseTrafficService {
     local.recentVisitors = [newVisitEntry, ...(local.recentVisitors || []).slice(0, 9)];
     // Active now: visitors within last 5 minutes
     const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-    local.activeNow = Math.max(
-      1,
-      local.recentVisitors.filter((v) => new Date(v.timestamp).getTime() >= fiveMinutesAgo).length
-    );
+    local.activeNow = local.recentVisitors.filter(
+      (v) => new Date(v.timestamp).getTime() >= fiveMinutesAgo
+    ).length;
 
     this.saveLocalCache(local);
 
@@ -238,10 +241,9 @@ class FirebaseTrafficService {
   async recordHeartbeat(): Promise<void> {
     const local = { ...this.cachedStats };
     const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-    local.activeNow = Math.max(
-      1,
-      (local.recentVisitors || []).filter((v) => new Date(v.timestamp).getTime() >= fiveMinutesAgo).length
-    );
+    local.activeNow = (local.recentVisitors || []).filter(
+      (v) => new Date(v.timestamp).getTime() >= fiveMinutesAgo
+    ).length;
     this.saveLocalCache(local);
   }
 
@@ -262,12 +264,9 @@ class FirebaseTrafficService {
             const cleanVisitors = rawVisitors.filter((v: { id?: string }) => v.id !== 'vis-1');
 
             const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-            const activeNowReal = Math.max(
-              cleanVisitors.filter(
-                (v: { timestamp: string }) => new Date(v.timestamp).getTime() >= fiveMinutesAgo
-              ).length,
-              1
-            );
+            const activeNowReal = cleanVisitors.filter(
+              (v: { timestamp: string }) => new Date(v.timestamp).getTime() >= fiveMinutesAgo
+            ).length;
 
             const normalized: TrafficStats = {
               totalVisits: data.totalVisits || 0,

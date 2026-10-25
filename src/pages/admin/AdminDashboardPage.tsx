@@ -219,8 +219,10 @@ export const AdminDashboardPage: React.FC = () => {
               <Activity className="w-4 h-4 text-emerald-400" />
             </div>
             <p className="text-2xl sm:text-3xl font-black text-emerald-400 flex items-center">
-              {traffic?.activeNow ?? 1}
-              <span className="ml-2 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              {traffic?.activeNow ?? 0}
+              {(traffic?.activeNow ?? 0) > 0 && (
+                <span className="ml-2 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              )}
             </p>
             <p className="text-[11px] text-stone-400">Visitors on website in last 5m</p>
           </div>
