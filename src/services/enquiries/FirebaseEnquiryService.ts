@@ -291,7 +291,8 @@ export class FirebaseEnquiryService implements EnquiryService {
     id: string,
     adminUid: string,
     adminName: string,
-    updatedByAdminName: string
+    updatedByAdminName: string,
+    updatedByAdminUid?: string
   ): Promise<Enquiry> {
     const existing = await this.getEnquiryById(id);
     if (!existing) throw new Error(`Enquiry ${id} not found.`);
@@ -306,10 +307,10 @@ export class FirebaseEnquiryService implements EnquiryService {
         {
           id: `log-${Date.now()}`,
           timestamp,
-          adminUid: 'current-admin',
+          adminUid: updatedByAdminUid || adminUid || 'admin',
           adminName: updatedByAdminName,
           action: 'Staff Assigned',
-          details: `Assigned handling to ${adminName}`,
+          details: adminName ? `Assigned handling to ${adminName}` : 'Unassigned enquiry handling',
         },
         ...existing.auditLogs,
       ],

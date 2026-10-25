@@ -15,7 +15,7 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from '../../config/firebase';
 import { AuthService } from './AuthService';
-import { AdminUser, AuthSession, AUTHORIZED_ADMIN_ROSTER } from '../../types/admin';
+import { AdminUser, AuthSession } from '../../types/admin';
 
 const SESSION_STORAGE_KEY = 'sri_caterers_firebase_admin_session';
 
@@ -79,18 +79,15 @@ export class FirebaseAuthService implements AuthService {
                 return;
               }
             } else {
-              // Match against authorized roster
-              const matchedRoster = AUTHORIZED_ADMIN_ROSTER.find(
-                (r) => r.email.toLowerCase() === normalized
-              );
-
+              // Dynamically build admin profile from authenticated Firebase user
+              const derivedName = firebaseUser.displayName || normalized.split('@')[0];
               admin = {
                 uid: firebaseUser.uid,
                 email: normalized,
-                displayName: matchedRoster?.displayName || firebaseUser.displayName || normalized.split('@')[0],
-                role: matchedRoster?.role || 'super_admin',
-                roleTitle: matchedRoster?.roleTitle || 'Sri Caterers Administrator',
-                avatarLetter: matchedRoster?.avatarLetter || (firebaseUser.displayName || normalized)[0].toUpperCase(),
+                displayName: derivedName,
+                role: 'super_admin',
+                roleTitle: 'Sri Caterers Administrator',
+                avatarLetter: (derivedName || 'A')[0].toUpperCase(),
                 isActive: true,
                 lastLoginAt: new Date().toISOString(),
               };
@@ -170,17 +167,14 @@ export class FirebaseAuthService implements AuthService {
         }
       }
 
-      const matchedRoster = AUTHORIZED_ADMIN_ROSTER.find(
-        (r) => r.email.toLowerCase() === normalizedEmail
-      );
-
+      const derivedName = firebaseUser.displayName || normalizedEmail.split('@')[0];
       let admin: AdminUser = {
         uid: firebaseUser.uid,
         email: normalizedEmail,
-        displayName: matchedRoster?.displayName || firebaseUser.displayName || normalizedEmail.split('@')[0],
-        role: matchedRoster?.role || 'super_admin',
-        roleTitle: matchedRoster?.roleTitle || 'Sri Caterers Administrator',
-        avatarLetter: matchedRoster?.avatarLetter || (firebaseUser.displayName || normalizedEmail)[0].toUpperCase(),
+        displayName: derivedName,
+        role: 'super_admin',
+        roleTitle: 'Sri Caterers Administrator',
+        avatarLetter: (derivedName || 'A')[0].toUpperCase(),
         isActive: true,
         lastLoginAt: new Date().toISOString(),
       };
@@ -305,7 +299,7 @@ export class FirebaseAuthService implements AuthService {
 
   /**
    * Fetches the dynamic list of administrator accounts stored in Cloud Firestore
-   * Checks 'adminUsers' first, then 'admins', then falls back to AUTHORIZED_ADMIN_ROSTER
+   * Checks 'adminUsers' first, then 'admins', then falls back to current authenticated user
    */
   async getAdmins(): Promise<AdminUser[]> {
     try {
@@ -320,26 +314,28 @@ export class FirebaseAuthService implements AuthService {
     } catch (err) {
       console.warn('Could not fetch admins from Firestore:', err);
     }
-    return AUTHORIZED_ADMIN_ROSTER;
+    const current = this.getCurrentUser();
+    return current ? [current] : [];
   }
 
   /**
-   * Seeds the 5 authorized admin profiles into Firestore 'adminUsers' and 'admins' collections
+   * Synchronizes the currently authenticated admin profile into Firestore 'adminUsers' and 'admins' collections
    */
-  async seedAdminUsers(): Promise<{ success: boolean; count: number; error?: string }> {
+  async syncCurrentAdmin(): Promise<{ success: boolean; count: number; error?: string }> {
     try {
-      let count = 0;
-      for (const admin of AUTHORIZED_ADMIN_ROSTER) {
-        const id = admin.uid;
-        await setDoc(doc(db, 'adminUsers', id), admin, { merge: true });
-        await setDoc(doc(db, 'admins', id), admin, { merge: true });
-        count++;
-      }
-      return { success: true, count };
+      const current = this.getCurrentUser();
+      if (!current) throw new Error('No active administrator session to synchronize.');
+      await setDoc(doc(db, 'adminUsers', current.uid), current, { merge: true });
+      await setDoc(doc(db, 'admins', current.uid), current, { merge: true });
+      return { success: true, count: 1 };
     } catch (err: any) {
-      console.error('Failed to seed adminUsers:', err);
+      console.error('Failed to sync admin profile:', err);
       return { success: false, count: 0, error: err.message };
     }
+  }
+
+  async seedAdminUsers(): Promise<{ success: boolean; count: number; error?: string }> {
+    return this.syncCurrentAdmin();
   }
 
   getCurrentUser(): AdminUser | null {

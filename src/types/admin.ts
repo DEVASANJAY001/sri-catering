@@ -21,53 +21,6 @@ export interface AuthSession {
 }
 
 /**
- * 5 distinct authorized admin accounts specification
- * Uses placeholder emails ADMIN_EMAIL_1 through ADMIN_EMAIL_5 as mandated
+ * Authorized admin roster is managed dynamically in Cloud Firestore
  */
-export const AUTHORIZED_ADMIN_ROSTER: AdminUser[] = [
-  {
-    uid: 'admin-01',
-    email: 'srinivasan@sricatering.davns.com',
-    displayName: 'Srinivasan R (Proprietor)',
-    role: 'super_admin',
-    roleTitle: 'Managing Director & Proprietor',
-    avatarLetter: 'S',
-    isActive: true
-  },
-  {
-    uid: 'admin-02',
-    email: 'operations@sricatering.davns.com',
-    displayName: 'Catering Operations Lead',
-    role: 'operations_admin',
-    roleTitle: 'General Catering Operations Manager',
-    avatarLetter: 'O',
-    isActive: true
-  },
-  {
-    uid: 'admin-03',
-    email: 'chef@sricatering.davns.com',
-    displayName: 'Master Chef & Menu Director',
-    role: 'head_chef',
-    roleTitle: 'Executive Chef & Kitchen Standards',
-    avatarLetter: 'C',
-    isActive: true
-  },
-  {
-    uid: 'admin-04',
-    email: 'relations@sricatering.davns.com',
-    displayName: 'Customer Relations Specialist',
-    role: 'client_relations',
-    roleTitle: 'Customer Bookings & Quotations',
-    avatarLetter: 'R',
-    isActive: true
-  },
-  {
-    uid: 'admin-05',
-    email: 'logistics@sricatering.davns.com',
-    displayName: 'Event Stalls & Logistics Manager',
-    role: 'logistics_admin',
-    roleTitle: 'On-Site Stalls & Supply Logistics',
-    avatarLetter: 'L',
-    isActive: true
-  }
-];
+export const AUTHORIZED_ADMIN_ROSTER: AdminUser[] = [];

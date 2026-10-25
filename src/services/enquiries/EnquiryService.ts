@@ -39,7 +39,8 @@ export interface EnquiryService {
     id: string,
     adminUid: string,
     adminName: string,
-    updatedByAdminName: string
+    updatedByAdminName: string,
+    updatedByAdminUid?: string
   ): Promise<Enquiry>;
   archiveEnquiry(
     id: string,

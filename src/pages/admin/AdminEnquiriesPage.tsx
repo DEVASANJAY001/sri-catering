@@ -18,12 +18,13 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { enquiryService } from '../../services/enquiries';
+import { authService } from '../../services/auth';
 import {
   Enquiry,
   EnquiryFilterOptions,
   EnquiryStatus,
 } from '../../types/enquiry';
-import { AUTHORIZED_ADMIN_ROSTER } from '../../types/admin';
+import { AdminUser } from '../../types/admin';
 import { siteConfig } from '../../config/siteConfig';
 import { useAuth } from '../../hooks/useAuth';
 import {
@@ -41,6 +42,7 @@ export const AdminEnquiriesPage: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
+  const [availableAdmins, setAvailableAdmins] = useState<AdminUser[]>(user ? [user] : []);
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -62,6 +64,20 @@ export const AdminEnquiriesPage: React.FC = () => {
 
   // Deletion Modal State
   const [deletingEnquiry, setDeletingEnquiry] = useState<Enquiry | null>(null);
+
+  useEffect(() => {
+    if (authService.getAdmins) {
+      authService.getAdmins().then((admins) => {
+        if (admins && admins.length > 0) {
+          setAvailableAdmins(admins);
+        } else if (user) {
+          setAvailableAdmins([user]);
+        }
+      });
+    } else if (user) {
+      setAvailableAdmins([user]);
+    }
+  }, [user]);
 
   useEffect(() => {
     loadEnquiries();
@@ -99,8 +115,8 @@ export const AdminEnquiriesPage: React.FC = () => {
     try {
       await enquiryService.markAsViewed(
         enquiryId,
-        user?.uid || 'admin-01',
-        user?.displayName || 'Administrator'
+        user?.uid || 'admin',
+        user?.displayName || 'Admin'
       );
       setEnquiries((prev) =>
         prev.map((item) =>
@@ -109,7 +125,7 @@ export const AdminEnquiriesPage: React.FC = () => {
                 ...item,
                 isViewed: true,
                 viewedAt: new Date().toISOString(),
-                viewedByAdminName: user?.displayName || 'Administrator',
+                viewedByAdminName: user?.displayName || 'Admin',
               }
             : item
         )
@@ -140,7 +156,7 @@ export const AdminEnquiriesPage: React.FC = () => {
       await enquiryService.updateEnquiryStatus(
         enquiryId,
         newStatus,
-        user?.uid || 'admin-01',
+        user?.uid || 'admin',
         user?.displayName || 'Admin'
       );
       // Update local state
@@ -157,21 +173,43 @@ export const AdminEnquiriesPage: React.FC = () => {
   // Inline Quick Admin Assignment
   const handleInlineAssignAdmin = async (enquiryId: string, adminUid: string) => {
     try {
-      const assignedUser = AUTHORIZED_ADMIN_ROSTER.find((a) => a.uid === adminUid);
-      if (!assignedUser) return;
+      if (!adminUid) {
+        await enquiryService.assignEnquiry(
+          enquiryId,
+          '',
+          '',
+          user?.displayName || 'Admin',
+          user?.uid
+        );
+        setEnquiries((prev) =>
+          prev.map((item) =>
+            item.id === enquiryId
+              ? {
+                  ...item,
+                  assignedAdminUid: undefined,
+                  assignedAdminName: undefined,
+                }
+              : item
+          )
+        );
+        return;
+      }
+      const assignedUser = availableAdmins.find((a) => a.uid === adminUid) || (user?.uid === adminUid ? user : null);
+      const adminName = assignedUser?.displayName || 'Admin';
       await enquiryService.assignEnquiry(
         enquiryId,
-        assignedUser.uid,
-        assignedUser.displayName,
-        user?.displayName || 'Admin'
+        adminUid,
+        adminName,
+        user?.displayName || 'Admin',
+        user?.uid
       );
       setEnquiries((prev) =>
         prev.map((item) =>
           item.id === enquiryId
             ? {
                 ...item,
-                assignedAdminUid: assignedUser.uid,
-                assignedAdminName: assignedUser.displayName,
+                assignedAdminUid: adminUid,
+                assignedAdminName: adminName,
               }
             : item
         )
@@ -186,7 +224,7 @@ export const AdminEnquiriesPage: React.FC = () => {
     try {
       await enquiryService.deleteEnquiry(
         deletingEnquiry.id,
-        user?.uid || 'admin-01',
+        user?.uid || 'admin',
         user?.displayName || 'Admin'
       );
       setEnquiries((prev) => prev.filter((i) => i.id !== deletingEnquiry.id));
@@ -330,9 +368,9 @@ export const AdminEnquiriesPage: React.FC = () => {
               className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-1 focus:ring-maroon-800 bg-white"
             >
               <option value="All">Assigned Admin: All</option>
-              {AUTHORIZED_ADMIN_ROSTER.map((a) => (
+              {availableAdmins.map((a) => (
                 <option key={a.uid} value={a.uid}>
-                  {a.displayName} ({a.roleTitle})
+                  {a.displayName} {a.roleTitle ? `(${a.roleTitle})` : ''}
                 </option>
               ))}
             </select>
@@ -548,7 +586,7 @@ export const AdminEnquiriesPage: React.FC = () => {
                           className="text-xs text-stone-700 bg-stone-50 border border-stone-200 rounded-lg px-2 py-1 max-w-[150px] truncate"
                         >
                           <option value="">Unassigned</option>
-                          {AUTHORIZED_ADMIN_ROSTER.map((a) => (
+                          {availableAdmins.map((a) => (
                             <option key={a.uid} value={a.uid}>
                               {a.displayName.split('(')[0].trim()}
                             </option>

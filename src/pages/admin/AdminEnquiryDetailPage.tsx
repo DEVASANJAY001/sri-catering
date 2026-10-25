@@ -22,8 +22,9 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { enquiryService } from '../../services/enquiries';
+import { authService } from '../../services/auth';
 import { Enquiry, EnquiryStatus } from '../../types/enquiry';
-import { AUTHORIZED_ADMIN_ROSTER } from '../../types/admin';
+import { AdminUser } from '../../types/admin';
 import { useAuth } from '../../hooks/useAuth';
 import {
   getStatusBadgeVariant,
@@ -40,11 +41,26 @@ export const AdminEnquiryDetailPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [enquiry, setEnquiry] = useState<Enquiry | null>(null);
+  const [availableAdmins, setAvailableAdmins] = useState<AdminUser[]>(user ? [user] : []);
   const [isLoading, setIsLoading] = useState(true);
   const [newNoteText, setNewNoteText] = useState('');
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  useEffect(() => {
+    if (authService.getAdmins) {
+      authService.getAdmins().then((admins) => {
+        if (admins && admins.length > 0) {
+          setAvailableAdmins(admins);
+        } else if (user) {
+          setAvailableAdmins([user]);
+        }
+      });
+    } else if (user) {
+      setAvailableAdmins([user]);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (id) loadEnquiry(id);
@@ -61,8 +77,8 @@ export const AdminEnquiryDetailPage: React.FC = () => {
           try {
             const viewed = await enquiryService.markAsViewed(
               enquiryId,
-              user?.uid || 'admin-01',
-              user?.displayName || 'Administrator'
+              user?.uid || 'admin',
+              user?.displayName || 'Admin'
             );
             setEnquiry(viewed);
           } catch (err) {
@@ -115,14 +131,30 @@ export const AdminEnquiryDetailPage: React.FC = () => {
 
   const handleAssignAdmin = async (adminUid: string) => {
     if (!enquiry || !user) return;
-    const targetAdmin = AUTHORIZED_ADMIN_ROSTER.find((a) => a.uid === adminUid);
-    if (!targetAdmin) return;
+    if (!adminUid) {
+      try {
+        const updated = await enquiryService.assignEnquiry(
+          enquiry.id,
+          '',
+          '',
+          user.displayName,
+          user.uid
+        );
+        setEnquiry(updated);
+      } catch (err) {
+        alert(`Could not unassign admin: ${err instanceof Error ? err.message : 'Error'}`);
+      }
+      return;
+    }
+    const targetAdmin = availableAdmins.find((a) => a.uid === adminUid) || (user.uid === adminUid ? user : null);
+    const targetName = targetAdmin?.displayName || 'Administrator';
     try {
       const updated = await enquiryService.assignEnquiry(
         enquiry.id,
-        targetAdmin.uid,
-        targetAdmin.displayName,
-        user.displayName
+        adminUid,
+        targetName,
+        user.displayName,
+        user.uid
       );
       setEnquiry(updated);
     } catch (err) {
@@ -504,9 +536,9 @@ export const AdminEnquiryDetailPage: React.FC = () => {
                 className="w-full px-4 py-2.5 rounded-xl border border-stone-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-maroon-800 bg-white"
               >
                 <option value="">-- Unassigned --</option>
-                {AUTHORIZED_ADMIN_ROSTER.map((a) => (
+                {availableAdmins.map((a) => (
                   <option key={a.uid} value={a.uid}>
-                    {a.displayName} ({a.roleTitle})
+                    {a.displayName} {a.roleTitle ? `(${a.roleTitle})` : ''}
                   </option>
                 ))}
               </select>

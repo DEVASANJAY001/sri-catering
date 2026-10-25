@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { authService } from '../../services/auth';
-import { AdminUser, AUTHORIZED_ADMIN_ROSTER } from '../../types/admin';
+import { AdminUser } from '../../types/admin';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { formatDateTime } from '../../utils/formatters';
@@ -24,28 +24,34 @@ import { formatDateTime } from '../../utils/formatters';
 export const AdminSettingsPage: React.FC = () => {
   const { user, session, logout } = useAuth();
   const navigate = useNavigate();
-  const [adminList, setAdminList] = useState<AdminUser[]>(AUTHORIZED_ADMIN_ROSTER);
+  const [adminList, setAdminList] = useState<AdminUser[]>(user ? [user] : []);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<{ success: boolean; msg: string } | null>(null);
 
   useEffect(() => {
     if (authService.getAdmins) {
       authService.getAdmins().then((admins) => {
-        if (admins && admins.length > 0) setAdminList(admins);
+        if (admins && admins.length > 0) {
+          setAdminList(admins);
+        } else if (user) {
+          setAdminList([user]);
+        }
       });
+    } else if (user) {
+      setAdminList([user]);
     }
-  }, []);
+  }, [user]);
 
   const handleSyncAdmins = async () => {
     setIsSyncing(true);
     setSyncStatus(null);
     try {
-      if ('seedAdminUsers' in authService) {
-        const res = await (authService as any).seedAdminUsers();
+      if ('syncCurrentAdmin' in authService) {
+        const res = await (authService as any).syncCurrentAdmin();
         if (res.success) {
           setSyncStatus({
             success: true,
-            msg: `Successfully synchronized ${res.count} admin profiles to Firestore 'adminUsers' & 'admins' collections!`,
+            msg: `Successfully synchronized active administrator account to Firestore 'adminUsers' & 'admins' collections!`,
           });
           if (authService.getAdmins) {
             const updated = await authService.getAdmins();
@@ -53,6 +59,18 @@ export const AdminSettingsPage: React.FC = () => {
           }
         } else {
           setSyncStatus({ success: false, msg: `Sync notice: ${res.error || 'Check Firestore permissions'}` });
+        }
+      } else if ('seedAdminUsers' in authService) {
+        const res = await (authService as any).seedAdminUsers();
+        if (res.success) {
+          setSyncStatus({
+            success: true,
+            msg: `Successfully synchronized admin account to Firestore!`,
+          });
+          if (authService.getAdmins) {
+            const updated = await authService.getAdmins();
+            setAdminList(updated);
+          }
         }
       }
     } catch (e: any) {
@@ -178,46 +196,52 @@ export const AdminSettingsPage: React.FC = () => {
         </div>
 
         {/* Accounts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {adminList.map((adm: AdminUser, i: number) => (
-            <div
-              key={adm.uid}
-              className={`p-4 rounded-2xl border transition-all ${
-                adm.uid === user?.uid
-                  ? 'bg-maroon-50/60 border-maroon-800/40 shadow-xs'
-                  : 'bg-white border-stone-200'
-              }`}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-9 h-9 rounded-xl bg-stone-900 text-gold font-bold text-sm flex items-center justify-center">
-                    {adm.avatarLetter}
+        {adminList.length === 0 ? (
+          <div className="p-8 text-center bg-stone-50 rounded-2xl border border-stone-200 text-xs text-stone-500">
+            No administrator accounts currently loaded. Please sign in or click &quot;Sync to Firestore&quot; above to register your profile.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {adminList.map((adm: AdminUser, i: number) => (
+              <div
+                key={adm.uid}
+                className={`p-4 rounded-2xl border transition-all ${
+                  adm.uid === user?.uid
+                    ? 'bg-maroon-50/60 border-maroon-800/40 shadow-xs'
+                    : 'bg-white border-stone-200'
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-9 h-9 rounded-xl bg-stone-900 text-gold font-bold text-sm flex items-center justify-center">
+                      {adm.avatarLetter}
+                    </div>
+                    <div>
+                      <h4 className="font-serif font-bold text-sm text-charcoal">
+                        {adm.displayName}
+                      </h4>
+                      <p className="text-[11px] text-stone-500 font-mono">
+                        {adm.email}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-serif font-bold text-sm text-charcoal">
-                      {adm.displayName}
-                    </h4>
-                    <p className="text-[11px] text-stone-500 font-mono">
-                      {adm.email}
-                    </p>
-                  </div>
+
+                  <Badge variant={adm.uid === user?.uid ? 'maroon' : 'charcoal'} size="sm">
+                    Admin {i + 1}
+                  </Badge>
                 </div>
 
-                <Badge variant={adm.uid === user?.uid ? 'maroon' : 'charcoal'} size="sm">
-                  Admin {i + 1}
-                </Badge>
+                <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
+                  <span>Role: <strong>{adm.roleTitle}</strong></span>
+                  <span className="text-emerald-700 font-medium flex items-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1" />
+                    Authorized
+                  </span>
+                </div>
               </div>
-
-              <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
-                <span>Role: <strong>{adm.roleTitle}</strong></span>
-                <span className="text-emerald-700 font-medium flex items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1" />
-                  Authorized
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Firebase Backend Live Status */}
