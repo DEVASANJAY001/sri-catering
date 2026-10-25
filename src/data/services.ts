@@ -57,7 +57,7 @@ export const CATERING_SERVICES: CateringServiceItem[] = [
     shortDescription: 'Grand royal wedding banquets featuring authentic plantain-leaf feasts, traditional sweets, and slow-cooked wood-fire dum biryani.',
     fullDescription: 'Our signature Tamil wedding catering blends centuries-old South Indian wedding culinary traditions with royal presentation. From auspicious early morning Muhurtham breakfast to the grand evening reception banquet, our culinary team and uniformed service staff deliver an unforgettable feast for your guests.',
     imageSrc: '/assets/images/services/wedding-catering.jpg',
-    menuCardImageSrc: '/assets/images/BHHBHJBJH.jpeg',
+    menuCardImageSrc: '/assets/images/WhatsApp Image 2026-10-11 at 1.22.11 PM.jpeg',
     eventTypesSupported: ['Wedding (திருமணம்)', 'Muhurtham', 'Reception (வரவேற்பு)'],
     mealStyles: ['Traditional Banana Leaf (இலை சாப்பாடு)', 'Royal Buffet', 'Live Chef Counters'],
     guestCountRange: '200 to 3,000+ Guests',
