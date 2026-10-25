@@ -170,40 +170,48 @@ export class FirebaseAuthService implements AuthService {
         }
       }
 
-      // Sync and retrieve Admin Profile in Cloud Firestore 'adminUsers' collection (primary) and 'admins' (fallback)
-      const adminUserRef = doc(db, 'adminUsers', firebaseUser.uid);
-      let adminSnap = await getDoc(adminUserRef);
-      if (!adminSnap.exists()) {
-        adminSnap = await getDoc(doc(db, 'admins', firebaseUser.uid));
-      }
-
       const matchedRoster = AUTHORIZED_ADMIN_ROSTER.find(
         (r) => r.email.toLowerCase() === normalizedEmail
       );
 
-      let admin: AdminUser;
-      if (adminSnap.exists()) {
-        admin = adminSnap.data() as AdminUser;
-        if (admin.isActive === false) {
-          await signOut(auth);
-          throw new Error('Your administrator account is deactivated. Please contact Sri Caterers management.');
+      let admin: AdminUser = {
+        uid: firebaseUser.uid,
+        email: normalizedEmail,
+        displayName: matchedRoster?.displayName || firebaseUser.displayName || normalizedEmail.split('@')[0],
+        role: matchedRoster?.role || 'super_admin',
+        roleTitle: matchedRoster?.roleTitle || 'Sri Caterers Administrator',
+        avatarLetter: matchedRoster?.avatarLetter || (firebaseUser.displayName || normalizedEmail)[0].toUpperCase(),
+        isActive: true,
+        lastLoginAt: new Date().toISOString(),
+      };
+
+      try {
+        // Sync and retrieve Admin Profile in Cloud Firestore 'adminUsers' collection (primary) and 'admins' (fallback)
+        const adminUserRef = doc(db, 'adminUsers', firebaseUser.uid);
+        let adminSnap = await getDoc(adminUserRef);
+        if (!adminSnap.exists()) {
+          adminSnap = await getDoc(doc(db, 'admins', firebaseUser.uid));
         }
-        await updateDoc(adminUserRef, { lastLoginAt: new Date().toISOString() }).catch(() => {});
-        await updateDoc(doc(db, 'admins', firebaseUser.uid), { lastLoginAt: new Date().toISOString() }).catch(() => {});
-      } else {
-        // Create initial admin record in Firestore 'adminUsers' and 'admins'
-        admin = {
-          uid: firebaseUser.uid,
-          email: normalizedEmail,
-          displayName: matchedRoster?.displayName || firebaseUser.displayName || normalizedEmail.split('@')[0],
-          role: matchedRoster?.role || 'super_admin',
-          roleTitle: matchedRoster?.roleTitle || 'Sri Caterers Administrator',
-          avatarLetter: matchedRoster?.avatarLetter || (firebaseUser.displayName || normalizedEmail)[0].toUpperCase(),
-          isActive: true,
-          lastLoginAt: new Date().toISOString(),
-        };
-        await setDoc(adminUserRef, admin, { merge: true }).catch(() => {});
-        await setDoc(doc(db, 'admins', firebaseUser.uid), admin, { merge: true }).catch(() => {});
+
+        if (adminSnap.exists()) {
+          const remoteAdmin = adminSnap.data() as AdminUser;
+          if (remoteAdmin.isActive === false) {
+            await signOut(auth);
+            throw new Error('Your administrator account is deactivated. Please contact Sri Caterers management.');
+          }
+          admin = remoteAdmin;
+          await updateDoc(adminUserRef, { lastLoginAt: new Date().toISOString() }).catch(() => {});
+          await updateDoc(doc(db, 'admins', firebaseUser.uid), { lastLoginAt: new Date().toISOString() }).catch(() => {});
+        } else {
+          // Create initial admin record in Firestore 'adminUsers' and 'admins'
+          await setDoc(adminUserRef, admin, { merge: true }).catch(() => {});
+          await setDoc(doc(db, 'admins', firebaseUser.uid), admin, { merge: true }).catch(() => {});
+        }
+      } catch (firestoreSyncErr: any) {
+        if (firestoreSyncErr?.message?.includes('deactivated')) {
+          throw firestoreSyncErr;
+        }
+        console.warn('Firestore admin profile sync fallback to matched roster:', firestoreSyncErr);
       }
 
       const session: AuthSession = {
