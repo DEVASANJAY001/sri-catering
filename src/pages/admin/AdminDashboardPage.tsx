@@ -263,7 +263,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <span className="text-amber-400 font-bold">
                   {traffic && (traffic.deviceBreakdown.mobile + traffic.deviceBreakdown.desktop > 0)
                     ? Math.round((traffic.deviceBreakdown.mobile / (traffic.deviceBreakdown.mobile + traffic.deviceBreakdown.desktop + (traffic.deviceBreakdown.tablet || 0))) * 100)
-                    : 45}%
+                    : 0}%
                 </span>
               </div>
               <div className="w-full h-1.5 rounded-full bg-stone-800 overflow-hidden">
@@ -272,7 +272,7 @@ export const AdminDashboardPage: React.FC = () => {
                   style={{
                     width: `${traffic && (traffic.deviceBreakdown.mobile + traffic.deviceBreakdown.desktop > 0)
                       ? Math.round((traffic.deviceBreakdown.mobile / (traffic.deviceBreakdown.mobile + traffic.deviceBreakdown.desktop + (traffic.deviceBreakdown.tablet || 0))) * 100)
-                      : 45}%`,
+                      : 0}%`,
                   }}
                 />
               </div>
@@ -283,7 +283,7 @@ export const AdminDashboardPage: React.FC = () => {
                 <span>
                   {traffic && (traffic.deviceBreakdown.mobile + traffic.deviceBreakdown.desktop > 0)
                     ? Math.round((traffic.deviceBreakdown.desktop / (traffic.deviceBreakdown.mobile + traffic.deviceBreakdown.desktop + (traffic.deviceBreakdown.tablet || 0))) * 100)
-                    : 55}%
+                    : 0}%
                 </span>
               </div>
             </div>
@@ -299,7 +299,7 @@ export const AdminDashboardPage: React.FC = () => {
             <div>
               <p className="text-[10px] text-stone-400 font-semibold uppercase">WhatsApp Leads</p>
               <p className="text-base sm:text-lg font-black text-emerald-300">
-                {traffic?.conversions?.whatsappClicks ?? 28}
+                {traffic?.conversions?.whatsappClicks ?? 0}
               </p>
             </div>
           </div>
@@ -311,7 +311,7 @@ export const AdminDashboardPage: React.FC = () => {
             <div>
               <p className="text-[10px] text-stone-400 font-semibold uppercase">Phone Call Leads</p>
               <p className="text-base sm:text-lg font-black text-amber-300">
-                {traffic?.conversions?.callClicks ?? 19}
+                {traffic?.conversions?.callClicks ?? 0}
               </p>
             </div>
           </div>

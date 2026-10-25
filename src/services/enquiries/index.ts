@@ -1,14 +1,8 @@
 import { EnquiryService } from './EnquiryService';
-import { mockEnquiryService } from './MockEnquiryService';
 import { firebaseEnquiryService } from './FirebaseEnquiryService';
-import { isFirebaseConfigured } from '../../config/firebase';
 
-const useFirebase = import.meta.env.VITE_USE_FIREBASE !== 'false' && isFirebaseConfigured;
-
-export const enquiryService: EnquiryService = useFirebase
-  ? firebaseEnquiryService
-  : mockEnquiryService;
+// Connected 100% to live Firebase Cloud Firestore
+export const enquiryService: EnquiryService = firebaseEnquiryService;
 
 export * from './EnquiryService';
-export * from './MockEnquiryService';
 export * from './FirebaseEnquiryService';

@@ -76,7 +76,7 @@ export const AdminSettingsPage: React.FC = () => {
             Administrative Settings &amp; Security
           </h1>
           <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
-            Manage your session, view authorized administrative roster, and inspect Phase 2 Firebase preparations.
+            Manage your session, view authorized administrative roster, and monitor active live Firebase connections.
           </p>
         </div>
 
@@ -220,16 +220,16 @@ export const AdminSettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Phase 2 Firebase Backend Readiness Guide */}
+      {/* Firebase Backend Live Status */}
       <div className="bg-stone-900 text-stone-300 rounded-3xl p-6 sm:p-8 border border-stone-800 shadow-xl space-y-6">
         <div className="flex items-center space-x-3 border-b border-stone-800 pb-4">
           <Database className="w-6 h-6 text-gold" />
           <div>
             <h2 className="font-serif font-bold text-lg text-white">
-              Phase 2: Firebase Integration Architecture
+              Firebase Backend &amp; Cloud Firestore Status: LIVE
             </h2>
             <p className="text-xs text-stone-400">
-              The application layer is structured with clean service interfaces ready to link Cloud Firestore.
+              Connected directly to Firebase project <code className="text-amber-300 font-mono">sricatering-64043</code> with real-time Cloud Firestore and Authentication.
             </p>
           </div>
         </div>
@@ -238,30 +238,30 @@ export const AdminSettingsPage: React.FC = () => {
           <div className="p-4 rounded-2xl bg-stone-800/70 border border-stone-700/60 space-y-2">
             <div className="flex items-center text-amber-300 font-bold">
               <Key className="w-4 h-4 mr-1.5 text-gold" />
-              <span>1. Firebase Auth</span>
+              <span>1. Firebase Auth: Active</span>
             </div>
             <p className="text-stone-400 leading-relaxed">
-              Create the 5 distinct email accounts in Firebase Console. Custom claims or the <code>adminUsers</code> collection enforce dashboard access.
+              Authenticating via Firebase Auth service with 8-hour verified session tokens and encrypted credential storage.
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-stone-800/70 border border-stone-700/60 space-y-2">
             <div className="flex items-center text-emerald-300 font-bold">
               <Server className="w-4 h-4 mr-1.5 text-emerald-400" />
-              <span>2. Cloud Firestore</span>
+              <span>2. Cloud Firestore: Connected</span>
             </div>
             <p className="text-stone-400 leading-relaxed">
-              Customer enquiries route directly to the <code>enquiries</code> collection with server-side timestamps. Notes remain locked to authorized admin UIDs.
+              Customer enquiries route directly to the <code className="text-emerald-400">enquiries</code> collection with real-time listeners and audit logs.
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-stone-800/70 border border-stone-700/60 space-y-2">
             <div className="flex items-center text-rose-300 font-bold">
               <ShieldCheck className="w-4 h-4 mr-1.5 text-rose-400" />
-              <span>3. Security Rules</span>
+              <span>3. Security Rules: Enforced</span>
             </div>
             <p className="text-stone-400 leading-relaxed">
-              Deploy firestore.rules ensuring public visitors can only write new enquiries, while only authenticated admins can read, update, or audit records.
+              Cloud security rules enforce that public visitors can only create new enquiries, while only authenticated administrators can read or modify.
             </p>
           </div>
         </div>

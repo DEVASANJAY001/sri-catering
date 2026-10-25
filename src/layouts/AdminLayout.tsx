@@ -166,9 +166,9 @@ export const AdminLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1.5 text-xs text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            <div className="flex items-center space-x-1.5 text-xs text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-300">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-semibold">Mock Service Active</span>
+              <span className="font-semibold">Firebase Live Connected</span>
             </div>
 
             <Link

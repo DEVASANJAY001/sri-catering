@@ -277,9 +277,9 @@ class FirebaseTrafficService {
               pageViews: data.pageViews || {},
               deviceBreakdown: data.deviceBreakdown || { mobile: 0, desktop: 0, tablet: 0 },
               conversions: data.conversions || {
-                whatsappClicks: 28,
-                callClicks: 19,
-                enquirySubmissions: 5,
+                whatsappClicks: 0,
+                callClicks: 0,
+                enquirySubmissions: 0,
               },
               recentVisitors: cleanVisitors,
             };
