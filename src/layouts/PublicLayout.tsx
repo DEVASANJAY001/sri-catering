@@ -11,8 +11,11 @@ export const PublicLayout: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Record real-time website traffic in Firebase Firestore
-    firebaseTrafficService.recordPageView(pathname);
+    // Record real-time website traffic in Firebase Firestore after route paint
+    const timer = setTimeout(() => {
+      firebaseTrafficService.recordPageView(pathname);
+    }, 250);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   return (

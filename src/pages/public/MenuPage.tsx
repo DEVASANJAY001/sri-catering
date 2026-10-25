@@ -105,9 +105,9 @@ export const MenuPage: React.FC = () => {
 
   // Carousel Scroll State & Refs
   const carouselRef = useRef<HTMLDivElement>(null);
+  const scrollRafRef = useRef<number | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isCarouselScrolling, setIsCarouselScrolling] = useState(false);
 
   // Package categories
   const packageCategories = [
@@ -127,19 +127,27 @@ export const MenuPage: React.FC = () => {
   const checkCarouselScroll = () => {
     if (!carouselRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    const hasLeft = scrollLeft > 10;
+    const hasRight = scrollLeft < scrollWidth - clientWidth - 10;
+    setCanScrollLeft((prev) => (prev !== hasLeft ? hasLeft : prev));
+    setCanScrollRight((prev) => (prev !== hasRight ? hasRight : prev));
   };
 
   useEffect(() => {
     checkCarouselScroll();
-    window.addEventListener('resize', checkCarouselScroll);
-    return () => window.removeEventListener('resize', checkCarouselScroll);
+    window.addEventListener('resize', checkCarouselScroll, { passive: true });
+    return () => {
+      window.removeEventListener('resize', checkCarouselScroll);
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
+    };
   }, [filteredPackages]);
 
   const handleCarouselScroll = () => {
-    setIsCarouselScrolling(true);
-    checkCarouselScroll();
+    if (scrollRafRef.current) return;
+    scrollRafRef.current = requestAnimationFrame(() => {
+      checkCarouselScroll();
+      scrollRafRef.current = null;
+    });
   };
 
   const scrollCarousel = (direction: 'left' | 'right') => {
@@ -364,7 +372,7 @@ export const MenuPage: React.FC = () => {
             <div
               aria-hidden="true"
               className={`pointer-events-none absolute -left-1 sm:left-0 inset-y-0 w-8 sm:w-16 bg-gradient-to-r from-stone-50 via-stone-50/70 to-transparent z-10 transition-opacity duration-300 ease-out ${
-                isCarouselScrolling && canScrollLeft ? 'opacity-100' : 'opacity-0'
+                canScrollLeft ? 'opacity-100' : 'opacity-0'
               }`}
             />
 
@@ -372,7 +380,7 @@ export const MenuPage: React.FC = () => {
             <div
               aria-hidden="true"
               className={`pointer-events-none absolute -right-1 sm:right-0 inset-y-0 w-8 sm:w-16 bg-gradient-to-l from-stone-50 via-stone-50/70 to-transparent z-10 transition-opacity duration-300 ease-out ${
-                isCarouselScrolling && canScrollRight ? 'opacity-100' : 'opacity-0'
+                canScrollRight ? 'opacity-100' : 'opacity-0'
               }`}
             />
 

@@ -26,7 +26,7 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full shadow-md">
+    <header className="sticky top-0 z-40 w-full shadow-xs sm:shadow-sm transform-gpu">
       {/* Top Auspicious Announcement Bar */}
       <div className="bg-maroon-950 text-amber-200 text-[11px] sm:text-xs py-1 sm:py-1.5 px-3 sm:px-4 border-b border-amber-900/40">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -73,8 +73,8 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Navbar */}
-      <nav className="bg-white/95 backdrop-blur-md border-b border-stone-200/80">
+      {/* Main Navbar - Fast solid white on mobile, backdrop-blur on larger screens */}
+      <nav className="bg-white sm:bg-white/95 sm:backdrop-blur-md border-b border-stone-200/80">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo and Brand */}

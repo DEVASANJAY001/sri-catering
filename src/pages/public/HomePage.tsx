@@ -27,25 +27,26 @@ import { FAQSection } from '../../components/common/FAQSection';
 
 export const HomePage: React.FC = () => {
   const [activeVideoModal, setActiveVideoModal] = useState<MediaAsset | null>(null);
-  const [isCarouselScrolling, setIsCarouselScrolling] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const carouselRef = useRef<HTMLDivElement | null>(null);
-  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollRafRef = useRef<number | null>(null);
+
+  const checkScrollState = () => {
+    if (!carouselRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+    const hasLeft = scrollLeft > 8;
+    const hasRight = scrollLeft < scrollWidth - clientWidth - 8;
+    setCanScrollLeft((prev) => (prev !== hasLeft ? hasLeft : prev));
+    setCanScrollRight((prev) => (prev !== hasRight ? hasRight : prev));
+  };
 
   const handleCarouselScroll = () => {
-    if (carouselRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-      setCanScrollLeft(scrollLeft > 6);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 6);
-    }
-    setIsCarouselScrolling(true);
-    if (scrollTimerRef.current) {
-      clearTimeout(scrollTimerRef.current);
-    }
-    scrollTimerRef.current = setTimeout(() => {
-      setIsCarouselScrolling(false);
-    }, 450);
+    if (scrollRafRef.current) return;
+    scrollRafRef.current = requestAnimationFrame(() => {
+      checkScrollState();
+      scrollRafRef.current = null;
+    });
   };
 
   const scrollCarousel = (direction: 'left' | 'right') => {
@@ -56,18 +57,11 @@ export const HomePage: React.FC = () => {
   };
 
   useEffect(() => {
-    const checkScroll = () => {
-      if (carouselRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-        setCanScrollLeft(scrollLeft > 6);
-        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 6);
-      }
-    };
-    checkScroll();
-    window.addEventListener('resize', checkScroll);
+    checkScrollState();
+    window.addEventListener('resize', checkScrollState, { passive: true });
     return () => {
-      window.removeEventListener('resize', checkScroll);
-      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      window.removeEventListener('resize', checkScrollState);
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
     };
   }, []);
 
@@ -89,6 +83,7 @@ export const HomePage: React.FC = () => {
             alt="Sri Caterers Authentic Tamil Nadu Feast and Banquet Setup"
             className="w-full h-full object-cover object-right lg:object-center opacity-90 contrast-105 brightness-100"
             loading="eager"
+            decoding="async"
           />
           {/* Smooth directional gradient: protective tint on the left for text contrast, fading to fully transparent on the right to reveal the feast setup bright and smooth */}
           <div className="absolute inset-0 bg-gradient-to-r from-maroon-950 via-maroon-950/80 via-40% lg:via-50% to-transparent" />
@@ -271,7 +266,7 @@ export const HomePage: React.FC = () => {
             <div
               aria-hidden="true"
               className={`pointer-events-none absolute -left-1 sm:left-0 inset-y-0 w-8 sm:w-16 bg-gradient-to-r from-stone-50 via-stone-50/70 to-transparent z-10 transition-opacity duration-300 ease-out ${
-                isCarouselScrolling && canScrollLeft ? 'opacity-100' : 'opacity-0'
+                canScrollLeft ? 'opacity-100' : 'opacity-0'
               }`}
             />
 
@@ -279,7 +274,7 @@ export const HomePage: React.FC = () => {
             <div
               aria-hidden="true"
               className={`pointer-events-none absolute -right-1 sm:right-0 inset-y-0 w-8 sm:w-16 bg-gradient-to-l from-stone-50 via-stone-50/70 to-transparent z-10 transition-opacity duration-300 ease-out ${
-                isCarouselScrolling && canScrollRight ? 'opacity-100' : 'opacity-0'
+                canScrollRight ? 'opacity-100' : 'opacity-0'
               }`}
             />
 

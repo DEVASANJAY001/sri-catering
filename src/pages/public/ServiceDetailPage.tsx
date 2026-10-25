@@ -231,6 +231,7 @@ export const ServiceDetailPage: React.FC = () => {
                 alt={bannerImages.length > 1 ? `${service.title} Official Menu Card - Part ${activeIdx + 1}` : `${service.title} Official Menu Card`}
                 key={bannerImages[activeIdx]}
                 className="w-full h-full object-contain rounded-xl transition-all duration-300 group-hover:scale-102"
+                decoding="async"
               />
 
               {/* Prev / Next buttons if multiple images */}

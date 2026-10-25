@@ -11,14 +11,10 @@ import React from 'react';
  * - Zero impact on site performance, clicks, scrolling, and accessibility
  */
 export const Watermark: React.FC = () => {
-  // SVG pattern data URI for repeating diagonal watermark across the entire viewport
+  // Lightweight SVG pattern data URI for repeating diagonal watermark across the entire viewport
+  // Pure vector styling without expensive SVG dropShadow filters to guarantee 60-120fps scrolling on all devices
   const svgPattern = `data:image/svg+xml;utf8,${encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="460" height="260" viewBox="0 0 460 260">
-      <defs>
-        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="0.5" dy="0.5" stdDeviation="0.5" flood-color="rgba(255,255,255,0.4)" />
-        </filter>
-      </defs>
       <g transform="rotate(-30 230 130)">
         <text 
           x="230" 
@@ -28,10 +24,7 @@ export const Watermark: React.FC = () => {
           font-size="14" 
           font-weight="800" 
           letter-spacing="0.22em" 
-          fill="rgba(30, 41, 59, 0.11)" 
-          stroke="rgba(0, 0, 0, 0.05)"
-          stroke-width="0.3"
-          filter="url(#shadow)"
+          fill="rgba(30, 41, 59, 0.09)" 
         >
           DAVNS INDUSTRIES — SRI CATERING
         </text>
@@ -43,8 +36,7 @@ export const Watermark: React.FC = () => {
           font-size="10.5" 
           font-weight="700" 
           letter-spacing="0.28em" 
-          fill="rgba(180, 83, 9, 0.14)"
-          filter="url(#shadow)"
+          fill="rgba(180, 83, 9, 0.12)"
         >
           ★ OFFICIAL LICENSED COPY ★
         </text>
@@ -57,10 +49,7 @@ export const Watermark: React.FC = () => {
           font-size="14" 
           font-weight="800" 
           letter-spacing="0.22em" 
-          fill="rgba(30, 41, 59, 0.11)" 
-          stroke="rgba(0, 0, 0, 0.05)"
-          stroke-width="0.3"
-          filter="url(#shadow)"
+          fill="rgba(30, 41, 59, 0.09)" 
         >
           DAVNS INDUSTRIES — SRI CATERING
         </text>
@@ -72,8 +61,7 @@ export const Watermark: React.FC = () => {
           font-size="10.5" 
           font-weight="700" 
           letter-spacing="0.28em" 
-          fill="rgba(180, 83, 9, 0.14)"
-          filter="url(#shadow)"
+          fill="rgba(180, 83, 9, 0.12)"
         >
           ★ OFFICIAL LICENSED COPY ★
         </text>
@@ -89,6 +77,9 @@ export const Watermark: React.FC = () => {
         backgroundImage: `url("${svgPattern}")`,
         backgroundRepeat: 'repeat',
         backgroundPosition: 'center center',
+        contain: 'strict',
+        transform: 'translateZ(0)',
+        willChange: 'transform',
       }}
     >
       {/* Prominent Large Center Diagonal Cross Ribbon for Authentic License Feel */}

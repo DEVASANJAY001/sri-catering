@@ -24,11 +24,11 @@ export const MediaCard: React.FC<MediaCardProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(0);
   const [showFeedback, setShowFeedback] = useState<'play' | 'pause' | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   // Auto-play / pause based on scrolling into and out of viewport
   useEffect(() => {
@@ -67,13 +67,14 @@ export const MediaCard: React.FC<MediaCardProps> = ({
     };
   }, []);
 
-  // Update progress bar
+  // High-performance progress update directly on DOM to prevent 60-FPS React re-renders
   const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
-    const current = videoRef.current.currentTime;
-    const total = videoRef.current.duration;
+    const video = videoRef.current;
+    const bar = progressBarRef.current;
+    if (!video || !bar) return;
+    const total = video.duration;
     if (total > 0) {
-      setProgress((current / total) * 100);
+      bar.style.width = `${(video.currentTime / total) * 100}%`;
     }
   };
 
@@ -176,11 +177,11 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         {/* Center Touch / Click Feedback Indicator */}
         {showFeedback && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-            <div className="w-16 h-16 rounded-full bg-maroon-950/85 backdrop-blur-sm border border-gold/50 text-white flex items-center justify-center shadow-2xl animate-ping">
+            <div className="w-14 h-14 rounded-full bg-maroon-950/90 border border-gold/50 text-white flex items-center justify-center shadow-xl">
               {showFeedback === 'play' ? (
-                <Play className="w-8 h-8 text-gold ml-1" />
+                <Play className="w-7 h-7 text-gold ml-0.5" />
               ) : (
-                <Pause className="w-8 h-8 text-white" />
+                <Pause className="w-7 h-7 text-white" />
               )}
             </div>
           </div>
@@ -221,11 +222,11 @@ export const MediaCard: React.FC<MediaCardProps> = ({
               </span>
             </div>
 
-            {/* Gold Progress Bar */}
+            {/* Gold Progress Bar - Direct DOM width update */}
             <div className="w-full bg-white/25 h-1 rounded-full overflow-hidden mt-1">
               <div
-                className="bg-gradient-to-r from-amber-400 via-gold to-turmeric-400 h-full transition-all duration-150"
-                style={{ width: `${progress}%` }}
+                ref={progressBarRef}
+                className="bg-gradient-to-r from-amber-400 via-gold to-turmeric-400 h-full w-0 transition-[width] duration-100 ease-linear"
               />
             </div>
           </div>

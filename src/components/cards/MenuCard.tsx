@@ -65,6 +65,7 @@ export const MenuPackageCard: React.FC<MenuPackageCardProps> = ({
           alt={pkg.name}
           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
 

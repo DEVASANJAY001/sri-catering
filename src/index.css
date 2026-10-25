@@ -5,11 +5,21 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
 
   body {
     @apply bg-ivory text-charcoal antialiased min-h-screen overflow-x-hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+  }
+
+  /* GPU Compositor Isolation for Hardware Acceleration */
+  .gpu-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   /* Traditional scrollbar */
