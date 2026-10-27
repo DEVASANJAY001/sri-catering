@@ -17,11 +17,12 @@ service cloud.firestore {
     // 1. Customer Enquiries Collection (`enquiries`)
     // ===============================================================
     match /enquiries/{enquiryId} {
-      // Public visitors can only create new enquiries with valid customer name and phone
-      allow create: if request.resource.data.customerName is string
+      // Public visitors can create new enquiries with valid customer name and phone
+      // Authenticated admins can also create/seed enquiries
+      allow create: if (request.resource.data.customerName is string
                     && request.resource.data.customerName.size() >= 2
                     && request.resource.data.mobileNumber is string
-                    && request.resource.data.mobileNumber.size() >= 10;
+                    && request.resource.data.mobileNumber.size() >= 10) || isAdmin();
 
       // Only authenticated admins can read, update status, assign, or delete enquiries
       allow read, update, delete: if isAdmin();

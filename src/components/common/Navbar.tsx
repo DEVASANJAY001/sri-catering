@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { siteConfig } from '../../config/siteConfig';
 import { MEDIA_ASSETS } from '../../config/assets';
+import { firebaseTrafficService } from '../../services/analytics/FirebaseTrafficService';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,6 +45,7 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center space-x-2.5 sm:space-x-4 shrink-0">
             <a
               href={`tel:${siteConfig.rawPhone}`}
+              onClick={() => firebaseTrafficService.recordEvent('call_click', 'Navbar Call Link')}
               className="flex items-center hover:text-white transition-colors"
             >
               <Phone className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 text-gold" />
@@ -54,6 +56,7 @@ export const Navbar: React.FC = () => {
               href={siteConfig.whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => firebaseTrafficService.recordEvent('whatsapp_click', 'Navbar WhatsApp Link')}
               className="hidden sm:flex items-center hover:text-white transition-colors text-emerald-400"
             >
               <MessageCircle className="w-3 h-3 mr-1" />

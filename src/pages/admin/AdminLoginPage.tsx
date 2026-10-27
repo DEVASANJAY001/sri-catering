@@ -148,6 +148,20 @@ export const AdminLoginPage: React.FC = () => {
               <ShieldCheck className="w-4 h-4 mr-1.5 text-gold" />
               <span>{isSubmitting ? 'Signing In...' : 'Sign In to Console'}</span>
             </button>
+
+            {/* Quick Demo Credentials Autofill */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setValue('email', 'admin@sricatering.com');
+                  setValue('password', 'admin123');
+                }}
+                className="w-full py-1.5 px-3 rounded-lg bg-stone-800/80 hover:bg-stone-800 border border-stone-700 text-[10px] sm:text-[11px] text-amber-300 font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <span>⚡ Auto-fill Admin Login: admin@sricatering.com</span>
+              </button>
+            </div>
           </form>
 
           {/* Back Link */}

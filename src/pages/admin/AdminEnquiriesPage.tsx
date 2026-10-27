@@ -263,9 +263,11 @@ export const AdminEnquiriesPage: React.FC = () => {
         ? aDate.localeCompare(bDate)
         : bDate.localeCompare(aDate);
     }
+    const aCreated = a.createdAt || '';
+    const bCreated = b.createdAt || '';
     return sortAsc
-      ? a.createdAt.localeCompare(b.createdAt)
-      : b.createdAt.localeCompare(a.createdAt);
+      ? aCreated.localeCompare(bCreated)
+      : bCreated.localeCompare(aCreated);
   });
 
   // Pagination
@@ -291,19 +293,39 @@ export const AdminEnquiriesPage: React.FC = () => {
       {/* Title & Actions Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-stone-200 shadow-xs">
         <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Live Firebase Firestore: sricatering-64043
+            </span>
+            <span className="text-xs text-stone-400">•</span>
+            <span className="text-xs font-semibold text-stone-600">
+              {enquiries.length} {enquiries.length === 1 ? 'Record' : 'Records'}
+            </span>
+          </div>
           <h1 className="font-serif text-2xl sm:text-3xl font-extrabold text-maroon-950">
             Customer Inquiries Management
           </h1>
           <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
-            Search, filter, track statuses, assign admins, and manage event orders.
+            Real-time Firestore synchronizer. Track statuses, assign admins, and manage event orders.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
+          <button
+            onClick={() => loadEnquiries()}
+            disabled={isLoading}
+            title="Force refresh from Firestore"
+            className="inline-flex items-center px-3.5 py-2.5 rounded-xl border border-stone-200 hover:border-maroon-800 bg-stone-50 hover:bg-stone-100 text-xs font-semibold text-stone-700 transition-colors shadow-2xs cursor-pointer disabled:opacity-60"
+          >
+            <RotateCcw className={`w-3.5 h-3.5 mr-1.5 text-stone-600 ${isLoading ? 'animate-spin text-maroon-800' : ''}`} />
+            <span>{isLoading ? 'Syncing...' : 'Sync Firestore'}</span>
+          </button>
+
           <button
             onClick={handleExportCsv}
             disabled={isExporting}
-            className="inline-flex items-center px-4 py-2.5 rounded-xl border border-stone-300 hover:border-maroon-800 bg-white text-xs sm:text-sm font-semibold text-stone-700 hover:text-maroon-950 transition-colors shadow-xs"
+            className="inline-flex items-center px-4 py-2.5 rounded-xl border border-stone-300 hover:border-maroon-800 bg-white text-xs sm:text-sm font-semibold text-stone-700 hover:text-maroon-950 transition-colors shadow-xs cursor-pointer"
           >
             <Download className="w-4 h-4 mr-2 text-stone-500" />
             <span>{isExporting ? 'Exporting...' : 'Export Filtered CSV'}</span>

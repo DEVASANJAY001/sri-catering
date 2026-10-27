@@ -20,6 +20,7 @@ import {
   MessageCircle,
   Flame,
   Award,
+  RotateCcw,
 } from 'lucide-react';
 import { enquiryService, DashboardStats } from '../../services/enquiries';
 import { firebaseTrafficService, TrafficStats } from '../../services/analytics/FirebaseTrafficService';
@@ -37,7 +38,21 @@ export const AdminDashboardPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isResettingTraffic, setIsResettingTraffic] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<string>(new Date().toLocaleTimeString());
+
+  const handleResetTraffic = async () => {
+    if (!window.confirm('Reset website analytics to 0 authentic clean state?')) return;
+    setIsResettingTraffic(true);
+    try {
+      await firebaseTrafficService.resetAnalytics();
+      await loadDashboardData(false);
+    } catch (err: any) {
+      alert(`Could not reset analytics: ${err.message}`);
+    } finally {
+      setIsResettingTraffic(false);
+    }
+  };
 
   useEffect(() => {
     loadDashboardData();
@@ -87,12 +102,17 @@ export const AdminDashboardPage: React.FC = () => {
 
   // Helper to format page paths into customer-friendly labels
   const formatPageLabel = (rawKey: string): { name: string; url: string } => {
-    const clean = rawKey.replace(/^_+/, '').replace(/\//g, '_');
+    const clean = rawKey
+      .replace(/^page_/, '')
+      .replace(/^_+/, '')
+      .replace(/\//g, '_')
+      .toLowerCase();
+
     if (!clean || clean === 'home') return { name: 'Homepage (முக்கிய பக்கம்)', url: '/' };
-    if (clean.includes('tamil-wedding')) return { name: 'Tamil Wedding Catering', url: '/services/tamil-wedding-catering' };
-    if (clean.includes('a-to-z')) return { name: 'A to Z Wedding Service', url: '/services/a-to-z-wedding-service' };
-    if (clean.includes('ac-wedding-hall')) return { name: 'A/C Wedding Hall Booking', url: '/services/ac-wedding-hall' };
-    if (clean.includes('traditional-family')) return { name: 'Traditional Family Functions', url: '/services/traditional-family-functions' };
+    if (clean.includes('tamil_wedding') || clean.includes('tamil-wedding')) return { name: 'Tamil Wedding Catering', url: '/services/tamil-wedding-catering' };
+    if (clean.includes('a_to_z') || clean.includes('a-to-z')) return { name: 'A to Z Wedding Service', url: '/services/a-to-z-wedding-service' };
+    if (clean.includes('ac_wedding') || clean.includes('ac-wedding')) return { name: 'A/C Wedding Hall Booking', url: '/services/ac-wedding-hall' };
+    if (clean.includes('traditional_family') || clean.includes('traditional-family')) return { name: 'Traditional Family Functions', url: '/services/traditional-family-functions' };
     if (clean.includes('housewarming')) return { name: 'Housewarming Ceremonies', url: '/services/housewarming-ceremonies' };
     if (clean.includes('temple')) return { name: 'Temple & Religious Annadhanam', url: '/services/temple-religious-functions' };
     if (clean.includes('birthday')) return { name: 'Birthday & Anniversary', url: '/services/birthday-anniversary-catering' };
@@ -115,10 +135,12 @@ export const AdminDashboardPage: React.FC = () => {
     );
   }
 
-  // Calculate live conversion rates
+  // Calculate authentic live conversion rate
   const totalLeads = (stats.totalEnquiries || 0) + (traffic?.conversions?.whatsappClicks || 0) + (traffic?.conversions?.callClicks || 0);
-  const totalVisitorsCount = Math.max(traffic?.totalVisits || 1, 1);
-  const conversionRate = Math.min(100, Math.round((totalLeads / totalVisitorsCount) * 100 * 10) / 10);
+  const totalUniqueVisits = traffic?.totalVisits ?? 0;
+  const conversionRate = totalUniqueVisits > 0
+    ? Math.min(100, Math.round((totalLeads / totalUniqueVisits) * 1000) / 10)
+    : 0;
 
   // Extract Top 5 Visited Catering Pages from real Firestore analytics
   const sortedPages = traffic?.pageViews
@@ -133,13 +155,17 @@ export const AdminDashboardPage: React.FC = () => {
       {/* Welcome & Live Action Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-stone-200 shadow-xs">
         <div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center flex-wrap gap-2">
             <span className="text-xs font-bold text-gold-dark uppercase tracking-wider block">
               Administrative Control Center
             </span>
             <span className="text-stone-300">•</span>
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Firebase Live Database: sricatering-64043
+            </span>
+            <span className="text-stone-300">•</span>
             <span className="text-[11px] text-stone-500 font-medium flex items-center">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
               Synced {lastSyncTime}
             </span>
           </div>
@@ -194,10 +220,10 @@ export const AdminDashboardPage: React.FC = () => {
             </span>
             <div>
               <h2 className="font-serif text-lg sm:text-xl font-black text-white flex items-center">
-                Firebase Real-Time Website Visits &amp; Visitor Stream
+                Firebase Real-Time Analytics &amp; Visitor Stream
               </h2>
               <p className="text-xs text-amber-300/80">
-                Live visitor presence and customer interaction monitoring across Chennai &amp; TN
+                100% authentic visitor sessions, real-time presence, and lead conversion metrics
               </p>
             </div>
           </div>
@@ -207,6 +233,15 @@ export const AdminDashboardPage: React.FC = () => {
               <Activity className="w-3.5 h-3.5 mr-1.5 text-emerald-400 animate-pulse" />
               Live Presence Stream Active
             </span>
+            <button
+              onClick={handleResetTraffic}
+              disabled={isResettingTraffic}
+              title="Reset analytics data to authentic zero state"
+              className="inline-flex items-center px-3 py-1 rounded-full bg-stone-800/90 hover:bg-stone-800 border border-stone-700 text-stone-300 hover:text-white transition-colors cursor-pointer text-[11px] disabled:opacity-50"
+            >
+              <RotateCcw className={`w-3 h-3 mr-1 text-amber-400 ${isResettingTraffic ? 'animate-spin' : ''}`} />
+              <span>{isResettingTraffic ? 'Resetting...' : 'Reset to Clean 0'}</span>
+            </button>
           </div>
         </div>
 
@@ -224,31 +259,35 @@ export const AdminDashboardPage: React.FC = () => {
                 <span className="ml-2 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               )}
             </p>
-            <p className="text-[11px] text-stone-400">Visitors on website in last 5m</p>
+            <p className="text-[11px] text-stone-400">Live users active in last 2 mins</p>
           </div>
 
           {/* Today's Visits */}
           <div className="bg-stone-950/70 border border-stone-800/80 rounded-2xl p-4 space-y-1 hover:border-amber-500/40 transition-colors">
             <div className="flex items-center justify-between text-xs text-stone-400 font-medium">
-              <span>Today&apos;s Website Visits</span>
+              <span>Today&apos;s Traffic</span>
               <Globe className="w-4 h-4 text-amber-400" />
             </div>
             <p className="text-2xl sm:text-3xl font-black text-amber-300">
               {(traffic?.todayVisits ?? 0).toLocaleString()}
             </p>
-            <p className="text-[11px] text-stone-400">Total authentic hits today</p>
+            <p className="text-[11px] text-stone-400">
+              {(traffic?.todayPageViews ?? 0).toLocaleString()} page views today
+            </p>
           </div>
 
           {/* Total Lifetime Visits */}
           <div className="bg-stone-950/70 border border-stone-800/80 rounded-2xl p-4 space-y-1 hover:border-gold/40 transition-colors">
             <div className="flex items-center justify-between text-xs text-stone-400 font-medium">
-              <span>Total Website Traffic</span>
+              <span>All-Time Sessions</span>
               <TrendingUp className="w-4 h-4 text-gold" />
             </div>
             <p className="text-2xl sm:text-3xl font-black text-white">
               {(traffic?.totalVisits ?? 0).toLocaleString()}
             </p>
-            <p className="text-[11px] text-stone-400">All-time portal visitor views</p>
+            <p className="text-[11px] text-stone-400">
+              {(traffic?.totalPageViews ?? 0).toLocaleString()} lifetime page views
+            </p>
           </div>
 
           {/* Device Breakdown */}
@@ -291,6 +330,28 @@ export const AdminDashboardPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Traffic Sources Attribution Row */}
+        {traffic?.sourcesBreakdown && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-stone-800/60 relative z-10 text-xs">
+            <div className="bg-stone-950/50 rounded-xl px-3 py-2 border border-stone-800/50 flex items-center justify-between">
+              <span className="text-stone-400 text-[11px]">Direct / Bookmark</span>
+              <span className="font-bold text-amber-300">{traffic.sourcesBreakdown.direct ?? 0}</span>
+            </div>
+            <div className="bg-stone-950/50 rounded-xl px-3 py-2 border border-stone-800/50 flex items-center justify-between">
+              <span className="text-stone-400 text-[11px]">Google Search</span>
+              <span className="font-bold text-emerald-400">{traffic.sourcesBreakdown.google ?? 0}</span>
+            </div>
+            <div className="bg-stone-950/50 rounded-xl px-3 py-2 border border-stone-800/50 flex items-center justify-between">
+              <span className="text-stone-400 text-[11px]">WhatsApp Shares</span>
+              <span className="font-bold text-emerald-300">{traffic.sourcesBreakdown.whatsapp ?? 0}</span>
+            </div>
+            <div className="bg-stone-950/50 rounded-xl px-3 py-2 border border-stone-800/50 flex items-center justify-between">
+              <span className="text-stone-400 text-[11px]">Instagram / Social</span>
+              <span className="font-bold text-purple-300">{traffic.sourcesBreakdown.instagram ?? 0}</span>
+            </div>
+          </div>
+        )}
 
         {/* Real-time Lead & Conversion Performance Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-stone-800/80 relative z-10">
@@ -349,9 +410,9 @@ export const AdminDashboardPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-amber-300/90 uppercase tracking-wider flex items-center">
                 <Flame className="w-3.5 h-3.5 mr-1 text-gold" />
-                Live Visitor Page Stream (Recent Sessions):
+                Live Visitor Activity Stream (Real-Time Sessions):
               </span>
-              <span className="text-[10px] text-stone-400">Streamed from Firebase</span>
+              <span className="text-[10px] text-stone-400">Synchronized via Cloud Firestore</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {traffic.recentVisitors.slice(0, 8).map((vis) => (
@@ -359,14 +420,23 @@ export const AdminDashboardPage: React.FC = () => {
                   key={vis.id}
                   className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-stone-950/90 border border-stone-800 text-xs shadow-xs"
                 >
-                  <span className={`w-2 h-2 rounded-full ${vis.action ? 'bg-amber-400 animate-ping' : 'bg-emerald-400'}`} />
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      vis.action && vis.action !== 'Page View' ? 'bg-amber-400 animate-ping' : 'bg-emerald-400'
+                    }`}
+                  />
                   <span className="font-mono text-amber-200 font-semibold">{vis.page}</span>
-                  {vis.action && (
+                  {vis.action && vis.action !== 'Page View' && (
                     <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                       {vis.action}
                     </span>
                   )}
-                  <span className="text-stone-500 text-[10px]">({vis.device})</span>
+                  <span className="text-stone-400 text-[10px]">
+                    {vis.deviceType} {vis.os ? `• ${vis.os}` : ''}
+                  </span>
+                  {vis.referrerSource && vis.referrerSource !== 'Internal Navigation' && (
+                    <span className="text-[9px] text-stone-500 font-mono">[{vis.referrerSource}]</span>
+                  )}
                 </div>
               ))}
             </div>
