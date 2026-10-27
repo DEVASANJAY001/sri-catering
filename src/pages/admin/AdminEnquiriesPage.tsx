@@ -22,6 +22,13 @@ import {
   VolumeX,
   X,
   Flame,
+  MessageCircle,
+  Mail,
+  Users,
+  MapPin,
+  Utensils,
+  Info,
+  ExternalLink,
 } from 'lucide-react';
 import { enquiryService } from '../../services/enquiries';
 import { authService } from '../../services/auth';
@@ -82,6 +89,9 @@ export const AdminEnquiriesPage: React.FC = () => {
 
   // Deletion Modal State
   const [deletingEnquiry, setDeletingEnquiry] = useState<Enquiry | null>(null);
+
+  // Remaining Details Popup Modal State
+  const [detailModalEnquiry, setDetailModalEnquiry] = useState<Enquiry | null>(null);
 
   // Play subtle web audio notification chime
   const playChimeSound = () => {
@@ -699,128 +709,107 @@ export const AdminEnquiriesPage: React.FC = () => {
                       <ArrowUpDown className="w-3 h-3 ml-1" />
                     </button>
                   </th>
-                  <th className="py-3.5 px-4">Customer Details</th>
-                  <th className="py-3.5 px-4">
-                    <button
-                      onClick={() => {
-                        setSortField('eventDate');
-                        setSortAsc(!sortAsc);
-                      }}
-                      className="flex items-center font-bold hover:text-maroon-800"
-                    >
-                      <span>Event &amp; Date</span>
-                      <ArrowUpDown className="w-3 h-3 ml-1" />
-                    </button>
+                  <th className="py-3.5 px-4 min-w-[280px]">
+                    Customer &amp; Contact Details
                   </th>
-                  <th className="py-3.5 px-4">
-                    <button
-                      onClick={() => {
-                        setSortField('guestCount');
-                        setSortAsc(!sortAsc);
-                      }}
-                      className="flex items-center font-bold hover:text-maroon-800"
-                    >
-                      <span>Guests</span>
-                      <ArrowUpDown className="w-3 h-3 ml-1" />
-                    </button>
-                  </th>
-                  <th className="py-3.5 px-4">Location</th>
                   <th className="py-3.5 px-4">Current Status</th>
                   <th className="py-3.5 px-4">Assigned Admin</th>
+                  <th className="py-3.5 px-4 text-center">Remaining Details</th>
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">
                 {paginatedEnquiries.map((enq) => {
                   const badge = getStatusBadgeVariant(enq.status);
+                  const cleanPhone = enq.mobileNumber.replace(/[^\d+]/g, '');
+                  const displayPhone = cleanPhone.startsWith('+91')
+                    ? cleanPhone
+                    : cleanPhone.startsWith('91') && cleanPhone.length > 10
+                    ? `+${cleanPhone}`
+                    : `+91 ${cleanPhone}`;
+
                   return (
                     <tr key={enq.id} className="hover:bg-stone-50/70 transition-colors">
                       {/* ID */}
                       <td className="py-4 px-4 font-mono font-bold text-maroon-900 whitespace-nowrap">
-                        <Link
-                          to={`/admin/enquiries/${enq.id}`}
-                          className="hover:underline flex items-center"
+                        <button
+                          type="button"
+                          onClick={() => setDetailModalEnquiry(enq)}
+                          className="hover:underline flex items-center font-bold text-maroon-900 cursor-pointer"
+                          title="Click to view full popup specifications"
                         >
                           {enq.id}
-                        </Link>
+                        </button>
                         <span className="text-[10px] text-stone-400 block font-sans">
                           {formatDateTime(enq.createdAt)}
                         </span>
                       </td>
 
-                      {/* Customer */}
+                      {/* 1st Customer & Contact Details (Requested upfront) */}
                       <td className="py-4 px-4">
-                        <div className="flex items-center space-x-2">
-                          <p className="font-bold text-charcoal">{enq.customerName}</p>
-                          {enq.isViewed ? (
-                            <span
-                              title={`Viewed by ${enq.viewedByAdminName || 'Admin'}`}
-                              className="inline-flex items-center text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-medium"
+                        <div className="space-y-1.5">
+                          {/* Full Name */}
+                          <div className="flex items-center space-x-2">
+                            <p className="font-extrabold text-stone-900 text-sm">{enq.customerName}</p>
+                            {enq.isViewed ? (
+                              <span
+                                title={`Viewed by ${enq.viewedByAdminName || 'Admin'}`}
+                                className="inline-flex items-center text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-medium"
+                              >
+                                <Check className="w-2.5 h-2.5 mr-0.5" /> Viewed
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleMarkAsViewed(enq.id)}
+                                title="Click to mark as viewed"
+                                className="inline-flex items-center text-[10px] text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200 font-bold transition-colors cursor-pointer"
+                              >
+                                <Sparkles className="w-2.5 h-2.5 mr-0.5" /> Mark Viewed
+                              </button>
+                            )}
+                          </div>
+
+                          {/* 10-Digit Mobile Number (+91) with Call & WhatsApp quick actions */}
+                          <div className="flex items-center gap-2 text-xs flex-wrap">
+                            <a
+                              href={`tel:${enq.mobileNumber}`}
+                              className="text-stone-800 hover:text-maroon-800 font-bold flex items-center font-mono"
+                              title="Click to call"
                             >
-                              <Check className="w-2.5 h-2.5 mr-0.5" /> Viewed
+                              <Phone className="w-3 h-3 mr-1 text-gold-dark" />
+                              {displayPhone}
+                            </a>
+                            <a
+                              href={`https://wa.me/91${enq.mobileNumber.replace(/\D/g, '').slice(-10)}?text=Hello%20${encodeURIComponent(enq.customerName)},%20this%20is%20Sri%20Caterers%20Chennai%20regarding%20your%20catering%20enquiry.`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Chat on WhatsApp"
+                              className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[10px] font-bold border border-emerald-200 transition-colors"
+                            >
+                              <MessageCircle className="w-2.5 h-2.5 mr-1" />
+                              WhatsApp
+                            </a>
+                          </div>
+
+                          {/* Email Address (Optional) */}
+                          <div className="text-[11px] text-stone-500 flex items-center gap-1.5">
+                            <Mail className="w-3 h-3 text-stone-400 shrink-0" />
+                            {enq.email && enq.email.trim() ? (
+                              <span className="truncate max-w-[200px] text-stone-700 font-medium">{enq.email}</span>
+                            ) : (
+                              <span className="text-stone-400 italic">No email address</span>
+                            )}
+                          </div>
+
+                          {/* Preferred Contact Method (Optional) */}
+                          <div className="pt-0.5">
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-900 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                              <span>Preferred:</span>
+                              <strong>{enq.preferredContactMethod || 'Phone Call'}</strong>
                             </span>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => handleMarkAsViewed(enq.id)}
-                              title="Click to mark as viewed"
-                              className="inline-flex items-center text-[10px] text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200 font-bold transition-colors cursor-pointer"
-                            >
-                              <Sparkles className="w-2.5 h-2.5 mr-0.5" /> Mark Viewed
-                            </button>
-                          )}
+                          </div>
                         </div>
-                        <a
-                          href={`tel:${enq.mobileNumber}`}
-                          className="text-stone-500 hover:text-maroon-800 flex items-center text-xs mt-0.5 font-medium"
-                        >
-                          <Phone className="w-3 h-3 mr-1 text-gold-dark" />
-                          {enq.mobileNumber}
-                        </a>
-                        {enq.email && enq.email.trim() ? (
-                          <span className="text-[11px] text-stone-400 block truncate max-w-[170px]">
-                            {enq.email}
-                          </span>
-                        ) : (
-                          <span className="text-[10px] text-stone-400 italic block">
-                            No email provided
-                          </span>
-                        )}
-                      </td>
-
-                      {/* Event & Date */}
-                      <td className="py-4 px-4">
-                        <p className="text-charcoal font-medium">{enq.eventType}</p>
-                        <span className="text-stone-500 text-xs flex items-center mt-0.5">
-                          <Calendar className="w-3 h-3 mr-1 text-maroon-700" />
-                          {enq.eventDate && enq.eventDate.trim() ? (
-                            formatEventDate(enq.eventDate)
-                          ) : (
-                            <span className="text-stone-400 italic">Date not finalized</span>
-                          )}
-                        </span>
-                      </td>
-
-                      {/* Guest Count */}
-                      <td className="py-4 px-4 font-semibold text-stone-700 whitespace-nowrap">
-                        {enq.guestCount && enq.guestCount > 0 ? (
-                          `${enq.guestCount} pax`
-                        ) : (
-                          <span className="text-stone-400 font-normal italic text-xs">
-                            Not specified
-                          </span>
-                        )}
-                      </td>
-
-                      {/* Location */}
-                      <td className="py-4 px-4 text-xs text-stone-600 max-w-xs truncate">
-                        {enq.eventLocation && enq.eventLocation.trim() ? (
-                          <span>{enq.eventLocation}</span>
-                        ) : (
-                          <span className="text-stone-400 font-normal italic">
-                            Not specified
-                          </span>
-                        )}
                       </td>
 
                       {/* Status Dropdown */}
@@ -863,14 +852,26 @@ export const AdminEnquiriesPage: React.FC = () => {
                         </select>
                       </td>
 
+                      {/* Show More Details Button */}
+                      <td className="py-4 px-4 text-center whitespace-nowrap">
+                        <button
+                          type="button"
+                          onClick={() => setDetailModalEnquiry(enq)}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-maroon-800 to-amber-700 hover:from-maroon-700 hover:to-amber-600 text-white font-bold text-xs shadow-xs hover:shadow-md transition-all cursor-pointer"
+                        >
+                          <Info className="w-3.5 h-3.5 text-amber-200" />
+                          <span>Show More Details</span>
+                        </button>
+                      </td>
+
                       {/* Action buttons */}
                       <td className="py-4 px-4 text-right whitespace-nowrap space-x-1.5">
                         <Link
                           to={`/admin/enquiries/${enq.id}`}
                           className="p-1.5 rounded-lg text-stone-600 hover:text-maroon-900 hover:bg-stone-100 inline-flex items-center"
-                          title="View Complete Details"
+                          title="View Full History Page"
                         >
-                          <Eye className="w-4 h-4" />
+                          <ExternalLink className="w-4 h-4" />
                         </Link>
 
                         <button
@@ -930,6 +931,215 @@ export const AdminEnquiriesPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Show More Details Popup Modal */}
+      {detailModalEnquiry && (
+        <Modal
+          isOpen={Boolean(detailModalEnquiry)}
+          onClose={() => setDetailModalEnquiry(null)}
+          title={`Enquiry #${detailModalEnquiry.id} • Customer & Event Specifications`}
+          maxWidth="2xl"
+        >
+          <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+            {/* 1st Customer & Contact Details Recap Card */}
+            <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-amber-700" />
+                  <span>1st: Customer &amp; Contact Details</span>
+                </span>
+                <span className="text-xs font-semibold text-stone-500">
+                  {formatDateTime(detailModalEnquiry.createdAt)}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+                <div>
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Full Name *</span>
+                  <p className="font-extrabold text-stone-900 text-sm mt-0.5">{detailModalEnquiry.customerName}</p>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">10-Digit Mobile Number *</span>
+                  <p className="font-bold text-stone-900 text-sm font-mono mt-0.5">
+                    +91 {detailModalEnquiry.mobileNumber.replace(/[^\d+]/g, '').replace(/^\+?91/, '').trim() || detailModalEnquiry.mobileNumber}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Email Address (Optional)</span>
+                  <p className="font-medium text-stone-800 mt-0.5">
+                    {detailModalEnquiry.email && detailModalEnquiry.email.trim() ? (
+                      detailModalEnquiry.email
+                    ) : (
+                      <span className="text-stone-400 italic">No email address</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Preferred Contact Method (Optional)</span>
+                  <p className="font-bold text-amber-900 mt-0.5">
+                    {detailModalEnquiry.preferredContactMethod || 'Phone Call'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-wrap gap-2 border-t border-amber-200/60">
+                <a
+                  href={`tel:${detailModalEnquiry.mobileNumber}`}
+                  className="px-3.5 py-1.5 rounded-xl bg-maroon-800 hover:bg-maroon-700 text-white font-bold text-xs inline-flex items-center gap-1.5 transition-colors shadow-xs"
+                >
+                  <Phone className="w-3.5 h-3.5 text-gold" />
+                  <span>Call Customer</span>
+                </a>
+                <a
+                  href={`https://wa.me/91${detailModalEnquiry.mobileNumber.replace(/\D/g, '').slice(-10)}?text=Hello%20${encodeURIComponent(detailModalEnquiry.customerName)},%20this%20is%20Sri%20Caterers%20Chennai%20regarding%20your%20catering%20enquiry.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs inline-flex items-center gap-1.5 transition-colors shadow-xs"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+
+            {/* 2nd Remaining Details Section */}
+            <div className="space-y-4">
+              <h4 className="font-serif font-black text-base text-maroon-950 flex items-center gap-2 border-b border-stone-200 pb-2">
+                <Utensils className="w-4 h-4 text-maroon-800" />
+                <span>Remaining Event &amp; Catering Specifications</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+                {/* Event Occasion */}
+                <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Event Occasion / Type</span>
+                  <p className="font-extrabold text-stone-900 text-sm">{detailModalEnquiry.eventType}</p>
+                </div>
+
+                {/* Planned Date */}
+                <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Auspicious Planned Date</span>
+                  <p className="font-extrabold text-maroon-900 text-sm flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-maroon-700" />
+                    {detailModalEnquiry.eventDate && detailModalEnquiry.eventDate.trim() ? (
+                      formatEventDate(detailModalEnquiry.eventDate)
+                    ) : (
+                      <span className="text-stone-400 font-normal italic">Date to be decided</span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Estimated Guests */}
+                <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Estimated Guest Count</span>
+                  <p className="font-extrabold text-charcoal text-sm flex items-center gap-1.5">
+                    <Users className="w-3.5 h-3.5 text-leaf-700" />
+                    {detailModalEnquiry.guestCount && detailModalEnquiry.guestCount > 0 ? (
+                      `${detailModalEnquiry.guestCount} Guests (pax)`
+                    ) : (
+                      <span className="text-stone-400 font-normal italic">Not specified by customer</span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Venue Location or Marriage Hall */}
+                <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Venue Location or Hall</span>
+                  <p className="font-bold text-stone-900 text-sm flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-maroon-800" />
+                    {detailModalEnquiry.eventLocation && detailModalEnquiry.eventLocation.trim() ? (
+                      detailModalEnquiry.eventLocation
+                    ) : (
+                      <span className="text-stone-400 font-normal italic">Not specified by customer</span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Catering Service */}
+                <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Catering Service Package</span>
+                  <p className="font-bold text-stone-900">
+                    {detailModalEnquiry.cateringService && detailModalEnquiry.cateringService.trim() ? (
+                      detailModalEnquiry.cateringService
+                    ) : (
+                      <span className="text-stone-400 font-normal italic">Not specified / General Consultation</span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Meal Preference */}
+                <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-200 space-y-1">
+                  <span className="text-[10px] font-bold text-stone-400 uppercase block">Meal Preference</span>
+                  <p className="font-bold text-stone-900">
+                    {detailModalEnquiry.mealPreference || 'Both (Veg & Non-Veg)'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Customer Message / Special Instructions */}
+              <div className="p-4 rounded-xl bg-stone-50 border border-stone-200 space-y-1.5">
+                <span className="text-[10px] font-bold text-stone-400 uppercase block">
+                  Customer Message &amp; Special Requirements
+                </span>
+                {detailModalEnquiry.message && detailModalEnquiry.message.trim() ? (
+                  <p className="text-xs text-stone-800 italic bg-white p-3 rounded-lg border border-stone-200 leading-relaxed">
+                    &quot;{detailModalEnquiry.message}&quot;
+                  </p>
+                ) : (
+                  <p className="text-xs text-stone-400 italic">No special instructions provided by customer.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Status Change Inside Modal */}
+            <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-[10px] font-bold text-stone-400 uppercase block">Update Status</span>
+                <p className="text-xs font-semibold text-stone-700">Currently: <strong className="text-maroon-900">{detailModalEnquiry.status}</strong></p>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                {(['Contacted', 'Follow-up Required', 'Quotation Sent', 'Confirmed'] as EnquiryStatus[]).map((st) => (
+                  <button
+                    key={st}
+                    type="button"
+                    onClick={async () => {
+                      await handleInlineStatusChange(detailModalEnquiry.id, st);
+                      setDetailModalEnquiry({ ...detailModalEnquiry, status: st });
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      detailModalEnquiry.status === st
+                        ? 'bg-maroon-800 text-white shadow-xs'
+                        : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-300'
+                    }`}
+                  >
+                    {st}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Modal Actions Footer */}
+            <div className="pt-3 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <Link
+                to={`/admin/enquiries/${detailModalEnquiry.id}`}
+                className="text-xs font-bold text-maroon-800 hover:text-maroon-900 inline-flex items-center gap-1 underline"
+              >
+                <span>Open Full Management &amp; Audit Trail</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => setDetailModalEnquiry(null)}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold text-xs transition-colors cursor-pointer"
+              >
+                Close Popup
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* Delete Confirmation Modal */}
       {deletingEnquiry && (
