@@ -321,7 +321,11 @@ export const AdminEnquiryDetailPage: React.FC = () => {
                   Auspicious Planned Date
                 </span>
                 <p className="font-extrabold text-maroon-900">
-                  {formatEventDate(enquiry.eventDate)} ({enquiry.eventDate})
+                  {enquiry.eventDate && enquiry.eventDate.trim() ? (
+                    `${formatEventDate(enquiry.eventDate)} (${enquiry.eventDate})`
+                  ) : (
+                    <span className="font-medium text-stone-400 italic">Date to be decided with customer</span>
+                  )}
                 </p>
               </div>
 
@@ -329,10 +333,17 @@ export const AdminEnquiryDetailPage: React.FC = () => {
                 <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
                   Estimated Guest Count
                 </span>
-                <p className="font-extrabold text-charcoal flex items-center">
-                  <Users className="w-4 h-4 mr-1.5 text-leaf-700" />
-                  {enquiry.guestCount} Guests
-                </p>
+                {enquiry.guestCount && enquiry.guestCount > 0 ? (
+                  <p className="font-extrabold text-charcoal flex items-center">
+                    <Users className="w-4 h-4 mr-1.5 text-leaf-700" />
+                    {enquiry.guestCount} Guests
+                  </p>
+                ) : (
+                  <p className="font-medium text-stone-400 italic flex items-center text-xs">
+                    <Users className="w-4 h-4 mr-1.5 text-stone-400" />
+                    Not specified by customer
+                  </p>
+                )}
               </div>
 
               <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-100 space-y-1">
@@ -352,7 +363,11 @@ export const AdminEnquiryDetailPage: React.FC = () => {
               </span>
               <p className="text-sm font-bold text-charcoal flex items-start">
                 <MapPin className="w-4 h-4 mr-1.5 text-maroon-800 shrink-0 mt-0.5" />
-                <span>{enquiry.eventLocation}</span>
+                {enquiry.eventLocation && enquiry.eventLocation.trim() ? (
+                  <span>{enquiry.eventLocation}</span>
+                ) : (
+                  <span className="text-stone-400 font-normal italic">Not specified by customer</span>
+                )}
               </p>
             </div>
 
@@ -367,7 +382,11 @@ export const AdminEnquiryDetailPage: React.FC = () => {
                     Catering Service
                   </span>
                   <p className="font-semibold text-charcoal mt-0.5">
-                    {enquiry.cateringService || 'General Consultation'}
+                    {enquiry.cateringService && enquiry.cateringService.trim() ? (
+                      enquiry.cateringService
+                    ) : (
+                      <span className="text-stone-400 font-normal italic">Not specified / General Consultation</span>
+                    )}
                   </p>
                 </div>
                 <div>

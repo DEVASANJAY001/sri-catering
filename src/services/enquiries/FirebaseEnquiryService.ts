@@ -64,19 +64,23 @@ export function normalizeEnquiryDoc(id: string, data: any): Enquiry {
     return new Date().toISOString();
   };
 
+  const rawGuests = Number(data.guestCount);
+  const validGuestCount = !isNaN(rawGuests) && rawGuests > 0 ? rawGuests : 0;
+  const rawLocation = typeof data.eventLocation === 'string' ? data.eventLocation.trim() : '';
+
   return {
     id: data.id || id,
     customerName: data.customerName || 'Valued Customer',
     mobileNumber: data.mobileNumber || '',
-    email: data.email || undefined,
-    eventType: data.eventType || 'General Catering Enquiry',
-    eventDate: data.eventDate || 'To be decided',
-    guestCount: Number(data.guestCount) || 50,
-    eventLocation: data.eventLocation || 'Chennai',
-    cateringService: data.cateringService || undefined,
+    email: data.email?.trim() || undefined,
+    eventType: data.eventType?.trim() || 'General Catering Enquiry',
+    eventDate: data.eventDate?.trim() || '',
+    guestCount: validGuestCount,
+    eventLocation: rawLocation,
+    cateringService: data.cateringService?.trim() || undefined,
     mealPreference: data.mealPreference || 'Both',
     preferredContactMethod: data.preferredContactMethod || 'Phone Call',
-    message: data.message || undefined,
+    message: data.message?.trim() || undefined,
     status: (data.status as EnquiryStatus) || 'New',
     isViewed: Boolean(data.isViewed),
     viewedAt: data.viewedAt ? getIsoString(data.viewedAt) : undefined,
@@ -131,16 +135,18 @@ export class FirebaseEnquiryService implements EnquiryService {
     const nextSeq = Math.floor(1000 + Math.random() * 9000);
     const newId = `ENQ-${new Date().getFullYear()}-${nextSeq}`;
 
+    const guestNum = input.guestCount && Number(input.guestCount) > 0 ? Number(input.guestCount) : 0;
+
     let newEnquiry: Enquiry = {
       id: newId,
       customerName: input.customerName.trim(),
       mobileNumber: input.mobileNumber.replace(/[^\d+]/g, '').trim(),
       email: input.email?.trim() || undefined,
-      eventType: input.eventType || 'General Catering Enquiry',
-      eventDate: input.eventDate || 'To be decided',
-      guestCount: Number(input.guestCount) || 50,
-      eventLocation: input.eventLocation?.trim() || 'Chennai',
-      cateringService: input.cateringService || undefined,
+      eventType: input.eventType?.trim() || 'General Catering Enquiry',
+      eventDate: input.eventDate?.trim() || '',
+      guestCount: guestNum,
+      eventLocation: input.eventLocation?.trim() || '',
+      cateringService: input.cateringService?.trim() || undefined,
       mealPreference: input.mealPreference || 'Both',
       preferredContactMethod: input.preferredContactMethod || 'Phone Call',
       message: input.message?.trim() || undefined,

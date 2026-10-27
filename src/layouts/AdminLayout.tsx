@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -11,14 +11,30 @@ import {
   AlertTriangle,
   Clock,
   Sparkles,
+  BellRing,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { enquiryService } from '../services/enquiries';
 import { MEDIA_ASSETS } from '../config/assets';
 
 export const AdminLayout: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [newEnquiriesCount, setNewEnquiriesCount] = useState<number>(0);
+
+  useEffect(() => {
+    enquiryService.getEnquiries().then((items) => {
+      setNewEnquiriesCount(items.filter((i) => i.status === 'New').length);
+    });
+
+    if (enquiryService.subscribeToEnquiries) {
+      const unsub = enquiryService.subscribeToEnquiries((items) => {
+        setNewEnquiriesCount(items.filter((i) => i.status === 'New').length);
+      });
+      return () => unsub();
+    }
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -57,13 +73,24 @@ export const AdminLayout: React.FC = () => {
             Sri Caterers • Admin
           </span>
         </div>
-        <button
-          onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className="p-1.5 rounded-lg text-amber-300 hover:bg-maroon-900"
-          aria-label="Toggle navigation menu"
-        >
-          {mobileSidebarOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center space-x-2">
+          {newEnquiriesCount > 0 && (
+            <Link
+              to="/admin/enquiries"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-xs animate-pulse"
+            >
+              <BellRing className="w-3 h-3" />
+              <span>{newEnquiriesCount} New</span>
+            </Link>
+          )}
+          <button
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            className="p-1.5 rounded-lg text-amber-300 hover:bg-maroon-900"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileSidebarOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Desktop / Responsive Sidebar */}
@@ -106,7 +133,12 @@ export const AdminLayout: React.FC = () => {
                 }
               >
                 {item.icon}
-                <span>{item.name}</span>
+                <span className="flex-1">{item.name}</span>
+                {item.path === '/admin/enquiries' && newEnquiriesCount > 0 && (
+                  <span className="ml-2 px-2 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-xs animate-pulse">
+                    {newEnquiriesCount} New
+                  </span>
+                )}
               </NavLink>
             ))}
           </nav>

@@ -93,17 +93,20 @@ export async function handleCreateEnquiry(payload: BackendEnquiryPayload) {
   const randomSuffix = Math.floor(1000 + Math.random() * 9000);
   const enquiryId = `ENQ-${new Date().getFullYear()}-${randomSuffix}`;
 
+  const rawGuestNum = Number(payload.guestCount);
+  const guestNum = !isNaN(rawGuestNum) && rawGuestNum > 0 ? rawGuestNum : 0;
+
   // 3. Assemble complete Enquiry record
   const record: Record<string, any> = {
     id: enquiryId,
     customerName: name,
     mobileNumber: digitsOnly,
     email: payload.email?.trim() || '',
-    eventType: payload.eventType || 'General Catering Enquiry',
-    eventDate: payload.eventDate || 'To be decided',
-    guestCount: Number(payload.guestCount) || 50,
-    eventLocation: payload.eventLocation?.trim() || 'Chennai',
-    cateringService: payload.cateringService || 'Traditional Catering Feasts',
+    eventType: payload.eventType?.trim() || 'General Catering Enquiry',
+    eventDate: payload.eventDate?.trim() || '',
+    guestCount: guestNum,
+    eventLocation: payload.eventLocation?.trim() || '',
+    cateringService: payload.cateringService?.trim() || '',
     mealPreference: payload.mealPreference || 'Both',
     preferredContactMethod: payload.preferredContactMethod || 'Phone Call',
     message: payload.message?.trim() || '',

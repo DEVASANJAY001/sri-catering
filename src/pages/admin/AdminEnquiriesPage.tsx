@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   Search,
@@ -16,6 +16,12 @@ import {
   Sparkles,
   AlertTriangle,
   RotateCcw,
+  Bell,
+  BellRing,
+  Volume2,
+  VolumeX,
+  X,
+  Flame,
 } from 'lucide-react';
 import { enquiryService } from '../../services/enquiries';
 import { authService } from '../../services/auth';
@@ -42,9 +48,21 @@ export const AdminEnquiriesPage: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
+  const [allRawEnquiries, setAllRawEnquiries] = useState<Enquiry[]>([]);
   const [availableAdmins, setAvailableAdmins] = useState<AdminUser[]>(user ? [user] : []);
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+
+  // Real-Time Notification & Sound State
+  const [incomingAlert, setIncomingAlert] = useState<{
+    id: string;
+    customerName: string;
+    eventType: string;
+    guestCount: number;
+    timestamp: string;
+  } | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const previousIdsRef = useRef<Set<string>>(new Set());
 
   // Filters State
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,6 +83,28 @@ export const AdminEnquiriesPage: React.FC = () => {
   // Deletion Modal State
   const [deletingEnquiry, setDeletingEnquiry] = useState<Enquiry | null>(null);
 
+  // Play subtle web audio notification chime
+  const playChimeSound = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch {
+      // Audio autoplay policy handled safely
+    }
+  };
+
   useEffect(() => {
     if (authService.getAdmins) {
       authService.getAdmins().then((admins) => {
@@ -84,16 +124,45 @@ export const AdminEnquiriesPage: React.FC = () => {
 
     // Real-time synchronization with Firestore enquiries
     if (enquiryService.subscribeToEnquiries) {
-      const unsubscribe = enquiryService.subscribeToEnquiries(() => {
-        loadEnquiries();
+      const unsubscribe = enquiryService.subscribeToEnquiries((incomingList) => {
+        if (incomingList && incomingList.length > 0) {
+          const prevIds = previousIdsRef.current;
+          if (prevIds.size > 0) {
+            // Find newly arrived inquiry that is status 'New'
+            const newlyCreated = incomingList.find(
+              (item) => !prevIds.has(item.id) && item.status === 'New'
+            );
+            if (newlyCreated) {
+              setIncomingAlert({
+                id: newlyCreated.id,
+                customerName: newlyCreated.customerName,
+                eventType: newlyCreated.eventType,
+                guestCount: newlyCreated.guestCount,
+                timestamp: new Date().toLocaleTimeString(),
+              });
+              if (soundEnabled) {
+                playChimeSound();
+              }
+            }
+          }
+          previousIdsRef.current = new Set(incomingList.map((i) => i.id));
+        }
+        loadEnquiries(true);
       });
       return () => unsubscribe();
     }
-  }, [statusFilter, eventTypeFilter, adminFilter, dateFrom, dateTo]);
+  }, [statusFilter, eventTypeFilter, adminFilter, dateFrom, dateTo, soundEnabled]);
 
-  const loadEnquiries = async () => {
-    setIsLoading(true);
+  const loadEnquiries = async (skipLoading = false) => {
+    if (!skipLoading) setIsLoading(true);
     try {
+      // Fetch global unfiltered list to calculate accurate status tab notification counts
+      const allItems = await enquiryService.getEnquiries();
+      setAllRawEnquiries(allItems);
+      if (previousIdsRef.current.size === 0 && allItems.length > 0) {
+        previousIdsRef.current = new Set(allItems.map((i) => i.id));
+      }
+
       const filters: EnquiryFilterOptions = {
         searchQuery: searchQuery.trim() || undefined,
         status: statusFilter === 'All' ? undefined : (statusFilter as EnquiryStatus),
@@ -107,7 +176,7 @@ export const AdminEnquiriesPage: React.FC = () => {
       setEnquiries(items);
       setCurrentPage(1);
     } finally {
-      setIsLoading(false);
+      if (!skipLoading) setIsLoading(false);
     }
   };
 
@@ -288,8 +357,166 @@ export const AdminEnquiriesPage: React.FC = () => {
     'Cancelled',
   ];
 
+  const newEnquiriesCount = allRawEnquiries.filter((e) => e.status === 'New').length;
+  const unviewedCount = allRawEnquiries.filter((e) => !e.isViewed).length;
+
   return (
     <div className="space-y-6">
+      {/* Real-time Arrival Alert Banner / Floating Toast */}
+      {incomingAlert && (
+        <div className="fixed top-5 right-5 z-50 max-w-sm w-full bg-stone-900 text-white border-2 border-amber-400 p-4 rounded-2xl shadow-2xl flex items-start space-x-3 animate-bounce">
+          <div className="w-10 h-10 rounded-xl bg-amber-400/20 flex items-center justify-center shrink-0 border border-amber-400/30">
+            <BellRing className="w-5 h-5 text-amber-400" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+                Just Received Now!
+              </span>
+              <button
+                type="button"
+                onClick={() => setIncomingAlert(null)}
+                className="text-stone-400 hover:text-white"
+                aria-label="Close notification"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="font-bold text-sm text-white truncate mt-1">
+              {incomingAlert.customerName}
+            </p>
+            <p className="text-xs text-stone-300">
+              {incomingAlert.eventType} • {incomingAlert.guestCount && incomingAlert.guestCount > 0 ? `${incomingAlert.guestCount} pax` : 'Guests pending'}
+            </p>
+            <div className="mt-2.5 flex items-center space-x-2">
+              <Link
+                to={`/admin/enquiries/${incomingAlert.id}`}
+                onClick={() => setIncomingAlert(null)}
+                className="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs transition-colors"
+              >
+                Open Enquiry
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setStatusFilter('New');
+                  setCurrentPage(1);
+                  setIncomingAlert(null);
+                }}
+                className="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 font-semibold text-xs transition-colors"
+              >
+                Filter New
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* High-Visibility New Enquiries Notification Banner */}
+      {newEnquiriesCount > 0 && (
+        <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white p-4 sm:p-5 rounded-3xl shadow-lg border border-amber-300/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/30 shadow-inner">
+              <BellRing className="w-6 h-6 text-white animate-bounce" />
+            </div>
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-white text-amber-900 uppercase tracking-wider shadow-xs">
+                  🔔 Action Required
+                </span>
+                <span className="text-xs font-bold text-amber-100 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+                  Live Firestore Pulse
+                </span>
+              </div>
+              <p className="font-serif font-black text-base sm:text-xl text-white mt-0.5">
+                {newEnquiriesCount} New {newEnquiriesCount === 1 ? 'Customer Enquiry' : 'Customer Enquiries'} Awaiting Contact!
+              </p>
+              <p className="text-xs text-amber-100/90">
+                {unviewedCount > 0 ? `${unviewedCount} unread queries.` : 'All marked viewed.'} Fast response within 15 minutes boosts event booking rate.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2.5 shrink-0 w-full sm:w-auto justify-end">
+            {statusFilter !== 'New' ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setStatusFilter('New');
+                  setCurrentPage(1);
+                }}
+                className="px-4 py-2 rounded-xl bg-white hover:bg-amber-50 text-amber-950 font-extrabold text-xs shadow-md transition-all cursor-pointer"
+              >
+                Filter: View New ({newEnquiriesCount})
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setStatusFilter('All');
+                  setCurrentPage(1);
+                }}
+                className="px-4 py-2 rounded-xl bg-amber-950/60 hover:bg-amber-950 text-white font-bold text-xs transition-all cursor-pointer"
+              >
+                Clear Filter (Show All)
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              title={soundEnabled ? 'Mute new enquiry alert chime' : 'Enable new enquiry alert chime'}
+              className="p-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+            >
+              {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Status Tabs with Live Notification Badges */}
+      <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+        {statuses.map((st) => {
+          const isSelected = statusFilter === st;
+          const count =
+            st === 'All'
+              ? allRawEnquiries.length
+              : allRawEnquiries.filter((e) => e.status === st).length;
+          const isNewTab = st === 'New';
+
+          return (
+            <button
+              key={st}
+              type="button"
+              onClick={() => {
+                setStatusFilter(st);
+                setCurrentPage(1);
+              }}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
+                isSelected
+                  ? 'bg-maroon-900 text-white shadow-md'
+                  : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 shadow-2xs'
+              }`}
+            >
+              <span>{st}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
+                  isNewTab && count > 0
+                    ? 'bg-rose-500 text-white animate-pulse'
+                    : isSelected
+                    ? 'bg-maroon-800 text-amber-200'
+                    : 'bg-stone-100 text-stone-600'
+                }`}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Title & Actions Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-stone-200 shadow-xs">
         <div>
@@ -550,9 +777,13 @@ export const AdminEnquiriesPage: React.FC = () => {
                           <Phone className="w-3 h-3 mr-1 text-gold-dark" />
                           {enq.mobileNumber}
                         </a>
-                        {enq.email && (
+                        {enq.email && enq.email.trim() ? (
                           <span className="text-[11px] text-stone-400 block truncate max-w-[170px]">
                             {enq.email}
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-stone-400 italic block">
+                            No email provided
                           </span>
                         )}
                       </td>
@@ -562,18 +793,34 @@ export const AdminEnquiriesPage: React.FC = () => {
                         <p className="text-charcoal font-medium">{enq.eventType}</p>
                         <span className="text-stone-500 text-xs flex items-center mt-0.5">
                           <Calendar className="w-3 h-3 mr-1 text-maroon-700" />
-                          {formatEventDate(enq.eventDate)}
+                          {enq.eventDate && enq.eventDate.trim() ? (
+                            formatEventDate(enq.eventDate)
+                          ) : (
+                            <span className="text-stone-400 italic">Date not finalized</span>
+                          )}
                         </span>
                       </td>
 
                       {/* Guest Count */}
                       <td className="py-4 px-4 font-semibold text-stone-700 whitespace-nowrap">
-                        {enq.guestCount} pax
+                        {enq.guestCount && enq.guestCount > 0 ? (
+                          `${enq.guestCount} pax`
+                        ) : (
+                          <span className="text-stone-400 font-normal italic text-xs">
+                            Not specified
+                          </span>
+                        )}
                       </td>
 
                       {/* Location */}
                       <td className="py-4 px-4 text-xs text-stone-600 max-w-xs truncate">
-                        {enq.eventLocation}
+                        {enq.eventLocation && enq.eventLocation.trim() ? (
+                          <span>{enq.eventLocation}</span>
+                        ) : (
+                          <span className="text-stone-400 font-normal italic">
+                            Not specified
+                          </span>
+                        )}
                       </td>
 
                       {/* Status Dropdown */}

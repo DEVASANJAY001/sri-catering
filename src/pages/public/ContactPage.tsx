@@ -34,7 +34,8 @@ export const ContactPage: React.FC = () => {
     email: '',
     eventType: 'Tamil Wedding Catering',
     eventDate: '',
-    guestCount: 150,
+    guestCount: '' as string | number,
+    eventLocation: '',
     preferredContactMethod: 'Phone Call' as 'Phone Call' | 'WhatsApp' | 'Email',
     message: '',
   });
@@ -65,14 +66,15 @@ export const ContactPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      const guestNum = formData.guestCount && Number(formData.guestCount) > 0 ? Number(formData.guestCount) : 0;
       const created = await enquiryService.createEnquiry({
         customerName: name,
         mobileNumber: digitsOnly,
         email: formData.email.trim() || undefined,
         eventType: formData.eventType,
-        eventDate: formData.eventDate || 'To be decided',
-        guestCount: Number(formData.guestCount) || 50,
-        eventLocation: 'Chennai',
+        eventDate: formData.eventDate || '',
+        guestCount: guestNum,
+        eventLocation: formData.eventLocation.trim() || '',
         preferredContactMethod: formData.preferredContactMethod,
         message: formData.message.trim() || undefined,
       });
@@ -404,14 +406,15 @@ export const ContactPage: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-amber-200 uppercase tracking-wider mb-1">
-                    Estimated Guests
+                    Estimated Guests <span className="text-stone-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     type="number"
-                    min="20"
+                    min="10"
                     step="10"
+                    placeholder="e.g. 200 (Optional)"
                     value={formData.guestCount}
-                    onChange={(e) => setFormData({ ...formData, guestCount: Number(e.target.value) })}
+                    onChange={(e) => setFormData({ ...formData, guestCount: e.target.value ? Number(e.target.value) : '' })}
                     className="w-full px-3.5 py-2.5 rounded-xl bg-stone-900 border border-stone-700 text-sm text-white focus:outline-none focus:border-amber-400 transition-colors"
                   />
                 </div>
@@ -419,13 +422,26 @@ export const ContactPage: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-semibold text-amber-200 uppercase tracking-wider mb-1">
-                  Message / Specific Dishes or Venue Location
+                  Venue / Hall Location <span className="text-stone-400 font-normal">(Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Mayor Ramanathan Hall, Santhome, or City / Area"
+                  value={formData.eventLocation}
+                  onChange={(e) => setFormData({ ...formData, eventLocation: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-stone-900 border border-stone-700 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-amber-400 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-amber-200 uppercase tracking-wider mb-1">
+                  Message / Specific Dishes or Special Instructions <span className="text-stone-400 font-normal">(Optional)</span>
                 </label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Tell us about the hall name, preferred menu items, or special requirements..."
+                  placeholder="Preferred menu items, timing, or questions..."
                   className="w-full px-3.5 py-2.5 rounded-xl bg-stone-900 border border-stone-700 text-sm text-white placeholder-stone-500 focus:outline-none focus:border-amber-400 transition-colors"
                 />
               </div>

@@ -682,10 +682,20 @@ export const AdminDashboardPage: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-4">
                         <p className="text-charcoal font-medium">{enq.eventType}</p>
-                        <p className="text-stone-500 text-xs">{formatEventDate(enq.eventDate)}</p>
+                        <p className="text-stone-500 text-xs">
+                          {enq.eventDate && enq.eventDate.trim() ? (
+                            formatEventDate(enq.eventDate)
+                          ) : (
+                            <span className="text-stone-400 italic">Date pending</span>
+                          )}
+                        </p>
                       </td>
                       <td className="py-3.5 px-4 font-semibold text-stone-700">
-                        {enq.guestCount} pax
+                        {enq.guestCount && enq.guestCount > 0 ? (
+                          `${enq.guestCount} pax`
+                        ) : (
+                          <span className="text-stone-400 font-normal italic text-xs">Not specified</span>
+                        )}
                       </td>
                       <td className="py-3.5 px-4">
                         <span

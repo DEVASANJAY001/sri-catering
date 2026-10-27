@@ -60,7 +60,7 @@ export const EnquiryPage: React.FC = () => {
       email: '',
       eventType: prefilledEventType,
       eventDate: '',
-      guestCount: 100,
+      guestCount: undefined,
       eventLocation: '',
       preferredContactMethod: 'Phone Call',
       cateringService: prefilledService,
@@ -88,14 +88,17 @@ export const EnquiryPage: React.FC = () => {
     setSubmissionError(null);
 
     try {
+      const rawGuests = Number(data.guestCount);
+      const guestNum = !isNaN(rawGuests) && rawGuests > 0 ? rawGuests : 0;
+
       const created = await enquiryService.createEnquiry({
         customerName: data.customerName,
         mobileNumber: data.mobileNumber,
         email: data.email || undefined,
         eventType: data.eventType || 'General Catering Enquiry',
-        eventDate: data.eventDate || 'To be decided',
-        guestCount: Number(data.guestCount) || 50,
-        eventLocation: data.eventLocation || 'Chennai',
+        eventDate: data.eventDate || '',
+        guestCount: guestNum,
+        eventLocation: data.eventLocation?.trim() || '',
         cateringService: data.cateringService || undefined,
         mealPreference: data.mealPreference,
         preferredContactMethod: data.preferredContactMethod || 'Phone Call',
