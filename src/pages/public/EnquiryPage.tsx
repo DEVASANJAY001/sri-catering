@@ -153,7 +153,7 @@ export const EnquiryPage: React.FC = () => {
 
           <div className="space-y-2">
             <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-stone-900">
-              Nandri! Your Catering Enquiry is Confirmed
+              Thank You! Your Catering Enquiry is Confirmed
             </h2>
             <p className="text-sm sm:text-base text-stone-600 max-w-lg mx-auto">
               We have received your enquiry for <strong className="text-charcoal">{submittedEnquiry.eventType}</strong> on{' '}
