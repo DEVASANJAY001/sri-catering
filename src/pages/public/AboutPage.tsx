@@ -72,7 +72,7 @@ export const AboutPage: React.FC = () => {
               </p>
 
               <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
-                Operating from our core facilities in <strong className="text-charcoal">{siteConfig.locations.primary}</strong>, we have earned trust by adhering strictly to traditional cooking methods: slow wood-fire preparation for authentic aromatic biryani, brass cauldrons for sambar and payasam, and fresh tender plantain leaves for serving.
+                Operating across <strong className="text-charcoal">{siteConfig.locations.primary}</strong>, we have earned trust by adhering strictly to traditional cooking methods: slow wood-fire preparation for authentic aromatic biryani, brass cauldrons for sambar and payasam, and fresh tender plantain leaves for serving.
               </p>
 
               <div className="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-stone-100 text-center">
