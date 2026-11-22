@@ -69,7 +69,7 @@ export const HomePage: React.FC = () => {
     <div className="space-y-12 sm:space-y-20">
       <SEO
         title="Authentic Tamil Nadu Catering & Royal Event Management"
-        description="Sri Caterers Chennai offers authentic Tamil Nadu catering. Traditional banana leaf wedding feasts, wood-fire mutton biryani, live snack stalls, and complete event management. Pure vegetarian & Halal non-veg packages from ₹149/leaf."
+        description="Sri Caterers Chennai offers authentic Tamil Nadu catering. Traditional banana leaf wedding feasts, wood-fire mutton biryani, live snack stalls, and complete event management. Pure vegetarian & Halal non-veg packages from ₹200/leaf."
         keywords="Tamil Nadu catering, Chennai caterers, wedding catering Chennai, banana leaf meals Chennai, wood fire mutton biryani Chennai, Sri Caterers Villivakkam, Perambur catering, Seemantham catering Chennai, Muhurtham feast, marriage catering Chennai, halal biryani catering"
         canonicalPath="/"
       />
@@ -222,7 +222,7 @@ export const HomePage: React.FC = () => {
               Popular Catering Feasts &amp; Combos
             </h2>
             <p className="text-xs sm:text-sm text-stone-600">
-              Explore our best-selling packages starting from ₹149/leaf up to full ₹1.98 Lakh mega wedding event packages.
+              Explore our best-selling packages starting from ₹200/leaf up to full ₹1.98 Lakh mega wedding event packages.
             </p>
             <KolamDivider theme="maroon" className="my-2" />
           </div>

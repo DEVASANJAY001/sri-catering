@@ -231,7 +231,7 @@ export const ServicesPage: React.FC = () => {
                   Popular Catering Packages
                 </h2>
                 <p className="text-xs sm:text-sm text-stone-600">
-                  Carefully structured from ₹149/leaf up to full ₹1.98 Lakh mega wedding event packages.
+                  Carefully structured from ₹200/leaf up to full ₹1.98 Lakh mega wedding event packages.
                 </p>
               </div>
 

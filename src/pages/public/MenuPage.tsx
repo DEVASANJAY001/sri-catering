@@ -188,9 +188,9 @@ export const MenuPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12 sm:space-y-16">
       <SEO
-        title="Catering Menu & Published Tariff Packages (₹149 to ₹299 / Plate) | Sri Caterers Chennai"
-        description="Browse Sri Caterers complete catering menus and published tariffs. ₹149 Chicken Biryani, ₹269 Mutton Biryani, ₹299 Royal 39-item dinner, ₹160 Muhurtham tiffin, Seemantham baby shower feasts and live stalls."
-        keywords="catering menu Chennai, biryani leaf price Chennai, 149 leaf catering Chennai, mutton biryani 269 leaf, marriage menu list Tamil, breakfast catering menu Chennai, Seemantham menu Chennai, baby shower catering"
+        title="Catering Menu & Published Tariff Packages (₹200 to ₹500 / Plate) | Sri Caterers Chennai"
+        description="Browse Sri Caterers complete catering menus and published tariffs. ₹200 Chicken Biryani, ₹500 Mutton Biryani, ₹299 Royal 39-item dinner, ₹160 Muhurtham tiffin, Seemantham baby shower feasts and live stalls. Complimentary ice cream & service for 100+ guests."
+        keywords="catering menu Chennai, biryani leaf price Chennai, 200 leaf catering Chennai, mutton biryani 500 leaf, marriage menu list Tamil, breakfast catering menu Chennai, Seemantham menu Chennai, baby shower catering"
         canonicalPath="/menu"
       />
 
@@ -248,7 +248,7 @@ export const MenuPage: React.FC = () => {
         <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200/90 text-stone-700 text-xs flex items-start space-x-2 text-left max-w-2xl mx-auto shadow-2xs">
           <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <p>
-            <strong>Menu Transparency Note:</strong> All packages below represent our genuine, published event tariffs and verified menu cards. Each menu can be tailored for your exact guest count, dietary preferences, and event date during consultation.
+            <strong>Special Catering Offer:</strong> For all biryani leaf packages, if the guest count is <strong>more than 100 guests</strong>, <strong>Ice Cream and Uniformed Service Staff are 100% Complimentary!</strong> Chicken Dum Biryani is ₹200/leaf, Wood-Fire Mutton Biryani is ₹500/leaf, and crispy Chicken 65 add-on is ₹50/leaf.
           </p>
         </div>
 

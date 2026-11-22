@@ -13,7 +13,7 @@ export interface SEOProps {
 
 const DEFAULT_TITLE = 'Sri Caterers Chennai | Authentic Tamil Nadu Catering & Royal Event Management';
 const DEFAULT_DESC =
-  'Sri Caterers Chennai offers authentic Tamil Nadu catering. Traditional banana leaf wedding feasts, wood-fire mutton biryani, live snack stalls, and complete event management. Pure vegetarian & Halal non-veg packages from ₹149/leaf.';
+  'Sri Caterers Chennai offers authentic Tamil Nadu catering. Traditional banana leaf wedding feasts, wood-fire mutton biryani, live snack stalls, and complete event management. Pure vegetarian & Halal non-veg packages from ₹200/leaf.';
 const DEFAULT_KEYWORDS =
   'Tamil Nadu catering, Chennai caterers, wedding catering Chennai, banana leaf meals Chennai, wood fire biryani Chennai, Sri Caterers Villivakkam, Perambur catering, Seemantham catering Chennai, Muhurtham feast';
 const SITE_URL = 'https://sricaterers.in';

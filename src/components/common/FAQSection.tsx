@@ -12,7 +12,7 @@ export const FAQS: FAQItem[] = [
   {
     question: 'What catering packages and per-leaf prices are offered by Sri Caterers Chennai?',
     answer:
-      'We offer budget-friendly to royal wedding packages. Our Tamil Dum Chicken Biryani feast starts from ₹149 per leaf with bread halwa and accompaniments. Our Wood-Fire Mutton Biryani package is ₹269 per leaf with Seeraga Samba mutton biryani, brinjal gravy, and payasam. We also offer all-inclusive mega celebration packages like ₹1,75,000 and ₹1.98 Lakh (600 guests) including live counters, veg feasts, and complete service staff.',
+      'We offer budget-friendly to royal wedding packages. Our Tamil Dum Chicken Biryani feast starts from ₹200 per leaf with bread halwa and accompaniments (optional Chicken 65 add-on at ₹50). Our Wood-Fire Mutton Biryani package is ₹500 per leaf with Seeraga Samba mutton biryani, brinjal gravy, and payasam. Special Offer: For all orders above 100 guests, Ice Cream and Uniformed Service Staff are completely complimentary! We also offer all-inclusive mega celebration packages like ₹1,75,000 and ₹1.98 Lakh (600 guests) including live counters, veg feasts, and complete event staff.',
   },
   {
     question: 'Do you provide 100% pure vegetarian and Halal non-vegetarian catering?',

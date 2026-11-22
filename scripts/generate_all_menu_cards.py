@@ -828,20 +828,20 @@ def make_card_2day_wedding_schedule():
     print("Saved card-2day-wedding-schedule.jpg")
 
 # =========================================================================
-# 9. CARD: MUTTON BIRYANI BANANA LEAF PACKAGE (₹269/-) (Balanced Layout)
+# 9. CARD: MUTTON BIRYANI BANANA LEAF PACKAGE (₹500/-) (Balanced Layout)
 # =========================================================================
 def make_card_mutton_biryani():
     width, height = 1200, 1850
     img, draw = create_card_canvas(width, height)
     draw_header(img, draw, width, fonts,
                 "AUTHENTIC WOOD-FIRE MUTTON BIRYANI PACKAGE",
-                "விறகடுப்பு மட்டன் பிரியாணி இலை சாப்பாடு (₹269/-)")
+                "விறகடுப்பு மட்டன் பிரியாணி இலை சாப்பாடு (₹500/-)")
     
     top_y = 330
     draw.rounded_rectangle([70, top_y, width-70, top_y+840], radius=20, fill=(255, 255, 255), outline=(180, 83, 9), width=2)
     
     draw.rounded_rectangle([100, top_y+20, width-100, top_y+85], radius=14, fill=(69, 10, 10))
-    p_text = "₹269 / Banana Leaf Meal  •  100% Halal Certified Mutton"
+    p_text = "₹500 / Banana Leaf Meal  •  100% Halal Certified Mutton"
     pb = draw.textbbox((0, 0), p_text, font=fonts['col_title'])
     draw.text(((width - (pb[2]-pb[0]))//2, top_y+36), p_text, font=fonts['col_title'], fill=(254, 240, 138))
     
@@ -915,20 +915,20 @@ def make_card_mutton_biryani():
     print("Saved card-mutton-biryani-pkg.jpg")
 
 # =========================================================================
-# 10. CARD: CHICKEN BIRYANI BANANA LEAF PACKAGE (₹149/-) (Balanced Layout)
+# 10. CARD: CHICKEN BIRYANI BANANA LEAF PACKAGE (₹200/-) (Balanced Layout)
 # =========================================================================
 def make_card_chicken_biryani():
     width, height = 1200, 1850
     img, draw = create_card_canvas(width, height)
     draw_header(img, draw, width, fonts,
                 "TAMIL DUM CHICKEN BIRYANI PACKAGE",
-                "சிக்கன் பிரியாணி இலை சாப்பாடு (₹149/-)")
+                "சிக்கன் பிரியாணி இலை சாப்பாடு (₹200/-)")
     
     top_y = 330
     draw.rounded_rectangle([70, top_y, width-70, top_y+840], radius=20, fill=(255, 255, 255), outline=(180, 83, 9), width=2)
     
     draw.rounded_rectangle([100, top_y+20, width-100, top_y+85], radius=14, fill=(69, 10, 10))
-    p_text = "₹149 / Banana Leaf Meal  •  Affordable Grand Feast"
+    p_text = "₹200 / Banana Leaf Meal  •  Affordable Grand Feast"
     pb = draw.textbbox((0, 0), p_text, font=fonts['col_title'])
     draw.text(((width - (pb[2]-pb[0]))//2, top_y+36), p_text, font=fonts['col_title'], fill=(254, 240, 138))
     

@@ -181,7 +181,7 @@ export const Footer: React.FC = () => {
               <li>
                 <Link to="/menu" className="hover:text-gold transition-colors flex items-center">
                   <ChevronRight className="w-3.5 h-3.5 mr-1 text-maroon-500" />
-                  Menu & Packages (₹149 & ₹269)
+                  Menu & Packages (₹200 & ₹500)
                 </Link>
               </li>
               <li>

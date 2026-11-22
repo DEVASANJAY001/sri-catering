@@ -4,11 +4,11 @@ export const MENU_PACKAGES: MenuPackage[] = [
   {
     id: 'pkg-chicken-biryani',
     name: 'Tamil Dum Chicken Biryani Package',
-    tamilName: 'சிக்கன் பிரியாணி இலை சாப்பாடு (₹149/-)',
-    priceTag: '₹149 / Leaf',
-    perLeafPrice: 149,
-    highlight: 'Budget-Friendly Grand Non-Veg Feast',
-    description: 'Tender chicken dum biryani cooked with aromatic spices, served hot with bread halwa, chilled onion raitha, and brinjal gravy on fresh plantain leaf.',
+    tamilName: 'சிக்கன் பிரியாணி இலை சாப்பாடு (₹200/-)',
+    priceTag: '₹200 / Leaf',
+    perLeafPrice: 200,
+    highlight: 'Grand Non-Veg Feast • Free Ice Cream & Service for 100+ Guests',
+    description: 'Tender chicken dum biryani cooked with aromatic spices, served hot with bread halwa, chilled onion raitha, and brinjal gravy on fresh plantain leaf. Complimentary ice cream and service staff included for orders above 100 guests.',
     category: 'leaf-meal',
     dietaryNorm: 'halal-non-veg',
     features: [
@@ -18,7 +18,8 @@ export const MENU_PACKAGES: MenuPackage[] = [
       'Traditional Brinjal Gravy',
       'Plantain Leaf Plate',
       'Packaged Drinking Water (300ml)',
-      'Optional: Chicken 65 Added (+₹50/-)'
+      'Optional: Chicken 65 Added (+₹50/-)',
+      'Orders > 100 Guests: Complimentary Ice Cream & Full Service Staff'
     ],
     imageSrc: '/assets/images/packages/pkg-chicken-biryani.jpg',
     flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.39 PM.jpeg',
@@ -27,11 +28,11 @@ export const MENU_PACKAGES: MenuPackage[] = [
   {
     id: 'pkg-mutton-biryani',
     name: 'Authentic Wood-Fire Mutton Biryani Package',
-    tamilName: 'விறகடுப்பு மட்டன் பிரியாணி இலை சாப்பாடு (₹269/-)',
-    priceTag: '₹269 / Leaf',
-    perLeafPrice: 269,
-    highlight: 'Banana Leaf Royal Non-Veg Feast',
-    description: 'Slow-cooked traditional Seeraga Samba mutton biryani prepared with firewood, served on banana leaf with complete royal accompaniments.',
+    tamilName: 'விறகடுப்பு மட்டன் பிரியாணி இலை சாப்பாடு (₹500/-)',
+    priceTag: '₹500 / Leaf',
+    perLeafPrice: 500,
+    highlight: 'Royal Non-Veg Feast • Free Ice Cream & Service for 100+ Guests',
+    description: 'Slow-cooked traditional Seeraga Samba mutton biryani prepared with firewood, served on banana leaf with complete royal accompaniments. Complimentary ice cream and service staff included for orders above 100 guests.',
     category: 'leaf-meal',
     dietaryNorm: 'halal-non-veg',
     features: [
@@ -41,7 +42,8 @@ export const MENU_PACKAGES: MenuPackage[] = [
       'Ennai Kathirikai (Brinjal Curry)',
       'Fresh Banana Leaf Service',
       'Packaged Drinking Water (300ml)',
-      'Optional: Chicken 65 Added (+₹50/-)'
+      'Optional: Chicken 65 Added (+₹50/-)',
+      'Orders > 100 Guests: Complimentary Ice Cream & Full Service Staff'
     ],
     imageSrc: '/assets/images/packages/pkg-mutton-biryani.jpg',
     flyerImageSrc: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.06 PM.jpeg',
@@ -384,7 +386,7 @@ export const MENU_ITEMS: MenuItem[] = [
     servingNorm: 'banana-leaf',
     isPopular: true,
     isChefSpecial: true,
-    packageAssociation: ['₹269 Mutton Biryani Leaf Meal', 'Grand Royal Wedding', 'Complete Wedding Lineup']
+    packageAssociation: ['₹500 Mutton Biryani Leaf Meal', 'Grand Royal Wedding', 'Complete Wedding Lineup']
   },
   {
     id: 'm-18',
@@ -396,19 +398,19 @@ export const MENU_ITEMS: MenuItem[] = [
     dietaryNorm: 'halal-non-veg',
     servingNorm: 'banana-leaf',
     isPopular: true,
-    packageAssociation: ['₹149 Chicken Biryani Leaf Meal', 'Grand Royal Wedding', 'Mega Celebration']
+    packageAssociation: ['₹200 Chicken Biryani Leaf Meal', 'Grand Royal Wedding', 'Mega Celebration']
   },
   {
     id: 'm-19',
     name: 'Crispy Chicken 65',
     tamilName: 'சிக்கன் 65',
     category: 'Non-Veg & Biryani',
-    description: 'Crunchy deep-fried boneless chicken cubes tossed with curry leaves, ginger garlic paste, and crushed peppercorns.',
+    description: 'Crunchy deep-fried boneless chicken cubes tossed with curry leaves, ginger garlic paste, and crushed peppercorns (₹50/- add-on per leaf).',
     isVegetarian: false,
     dietaryNorm: 'halal-non-veg',
     servingNorm: 'buffet',
     isPopular: true,
-    packageAssociation: ['Grand Royal Wedding', 'Complete Wedding Lineup', 'Add-on Leaf Meal']
+    packageAssociation: ['₹200 Chicken Biryani Leaf Meal', '₹500 Mutton Biryani Leaf Meal', 'Grand Royal Wedding', 'Complete Wedding Lineup', 'Add-on Leaf Meal']
   },
   {
     id: 'm-chk-gravy',
@@ -454,7 +456,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietaryNorm: 'pure-veg',
     servingNorm: 'banana-leaf',
     isPopular: true,
-    packageAssociation: ['₹149 Chicken Biryani', '₹269 Mutton Biryani', 'Grand Royal Wedding']
+    packageAssociation: ['₹200 Chicken Biryani', '₹500 Mutton Biryani', 'Grand Royal Wedding']
   },
 
   // Traditional Veg Meals
@@ -716,7 +718,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietaryNorm: 'pure-veg',
     servingNorm: 'banana-leaf',
     isPopular: true,
-    packageAssociation: ['₹149 Chicken Biryani', '₹269 Mutton Biryani', 'Grand Royal Wedding']
+    packageAssociation: ['₹200 Chicken Biryani', '₹500 Mutton Biryani', 'Grand Royal Wedding']
   },
   {
     id: 'm-firni',

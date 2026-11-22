@@ -51,6 +51,7 @@ export const EnquiryPage: React.FC = () => {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<EnquiryFormValues>({
     resolver: zodResolver(enquirySchema) as any,
@@ -76,6 +77,7 @@ export const EnquiryPage: React.FC = () => {
 
   // Minimum date today formatted for datepicker
   const todayDateString = new Date().toISOString().split('T')[0];
+  const currentGuestCount = watch('guestCount');
 
   const onSubmit = async (data: EnquiryFormValues) => {
     // If honeypot filled, silently drop spam
@@ -125,7 +127,7 @@ export const EnquiryPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
       <SEO
         title="Event Booking Enquiry & Instant Quotation | Sri Caterers"
         description="Submit your catering enquiry to Sri Caterers Chennai. Get custom quotes for weddings, poojas, birthdays, and corporate banquets. Fast response & transparent pricing."
@@ -134,17 +136,17 @@ export const EnquiryPage: React.FC = () => {
       />
 
       {/* Page Header */}
-      <div className="text-center max-w-2xl mx-auto space-y-3">
-        <Badge variant="maroon" size="md">
+      <div className="text-center max-w-xl mx-auto space-y-2">
+        <Badge variant="maroon" size="sm">
           Direct Booking Desk
         </Badge>
-        <h1 className="font-serif text-3xl sm:text-5xl font-black text-maroon-950">
+        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-maroon-950 tracking-tight">
           Enquire for Your Celebration
         </h1>
-        <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
+        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
           Share your event details and guest estimate. Our catering team will prepare a customized quotation with per-leaf or complete package rates.
         </p>
-        <KolamDivider theme="gold" />
+        <KolamDivider theme="gold" className="my-1" />
       </div>
 
       {/* Success State Screen */}
@@ -246,8 +248,8 @@ export const EnquiryPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        /* Form Card with compact mobile padding */
-        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 border border-stone-200 shadow-xl space-y-6 sm:space-y-8">
+        /* Form Container - Seamless Transparent Background Built into the Page */
+        <div className="bg-transparent rounded-none p-0 border-0 shadow-none space-y-6 sm:space-y-8">
           {submissionError && (
             <div className="p-3 sm:p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm flex items-start space-x-2.5">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
@@ -391,7 +393,7 @@ export const EnquiryPage: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-stone-200 bg-stone-50/50 p-5 sm:p-6 space-y-8 animate-fadeIn">
+                <div className="rounded-2xl border border-stone-300/80 bg-white/60 p-4 sm:p-6 space-y-6 sm:space-y-8 backdrop-blur-xs animate-fadeIn">
                   {/* Top Header with Close Button */}
                   <div className="flex items-center justify-between pb-3 border-b border-stone-200">
                     <div className="flex items-center gap-2">
@@ -490,6 +492,16 @@ export const EnquiryPage: React.FC = () => {
                         />
                         {errors.guestCount && (
                           <p className="text-xs text-red-600 mt-1">{errors.guestCount.message}</p>
+                        )}
+                        {Number(currentGuestCount) > 100 ? (
+                          <div className="mt-1.5 flex items-center space-x-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-2.5 py-1">
+                            <span>🎉</span>
+                            <span>Orders over 100 guests: <strong>Complimentary Ice Cream &amp; Service Staff unlocked!</strong></span>
+                          </div>
+                        ) : (
+                          <p className="text-[11px] text-stone-500 mt-1">
+                            ✨ <span className="font-semibold text-maroon-900">Special Offer:</span> Orders of more than 100 guests include <strong>Complimentary Ice Cream &amp; Service Staff!</strong>
+                          </p>
                         )}
                       </div>
                     </div>
@@ -598,7 +610,7 @@ export const EnquiryPage: React.FC = () => {
             </div>
 
             {/* Privacy notice banner */}
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200 flex items-start space-x-3 text-xs text-stone-600">
+            <div className="p-4 rounded-xl bg-white/70 border border-stone-200/90 flex items-start space-x-3 text-xs text-stone-600">
               <ShieldCheck className="w-5 h-5 text-leaf-700 shrink-0 mt-0.5" />
               <div>
                 <strong className="text-stone-800 font-semibold">Privacy &amp; Security:</strong> We only collect your name, mobile number, and event details to provide a catering quote and coordinate service. We never sell or share customer details with third parties.

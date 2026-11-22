@@ -60,8 +60,8 @@ export const siteConfig = {
     },
     {
       title: "Affordable & Transparent",
-      description: "Packages starting from ₹149/- per leaf up to grand all-inclusive ₹1.98 Lakh celebration packages.",
-      simpleDesc: "Packages from ₹149/leaf up to grand ₹1.98 Lakh combos."
+      description: "Packages starting from ₹200/- per leaf up to grand all-inclusive ₹1.98 Lakh celebration packages. Complimentary ice cream & service for 100+ guests.",
+      simpleDesc: "Packages from ₹200/leaf up to grand ₹1.98 Lakh combos."
     }
   ],
 
