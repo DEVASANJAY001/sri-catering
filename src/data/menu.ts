@@ -28,9 +28,9 @@ export const MENU_PACKAGES: MenuPackage[] = [
   {
     id: 'pkg-mutton-biryani',
     name: 'Authentic Wood-Fire Mutton Biryani Package',
-    tamilName: 'விறகடுப்பு மட்டன் பிரியாணி இலை சாப்பாடு (₹500/-)',
-    priceTag: '₹500 / Leaf',
-    perLeafPrice: 500,
+    tamilName: 'விறகடுப்பு மட்டன் பிரியாணி இலை சாப்பாடு (₹300/-)',
+    priceTag: '₹300 / Leaf',
+    perLeafPrice: 300,
     highlight: 'Royal Non-Veg Feast • Free Ice Cream & Service for 100+ Guests',
     description: 'Slow-cooked traditional Seeraga Samba mutton biryani prepared with firewood, served on banana leaf with complete royal accompaniments. Complimentary ice cream and service staff included for orders above 100 guests.',
     category: 'leaf-meal',
@@ -386,7 +386,7 @@ export const MENU_ITEMS: MenuItem[] = [
     servingNorm: 'banana-leaf',
     isPopular: true,
     isChefSpecial: true,
-    packageAssociation: ['₹500 Mutton Biryani Leaf Meal', 'Grand Royal Wedding', 'Complete Wedding Lineup']
+    packageAssociation: ['₹300 Mutton Biryani Leaf Meal', 'Grand Royal Wedding', 'Complete Wedding Lineup']
   },
   {
     id: 'm-18',
@@ -410,7 +410,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietaryNorm: 'halal-non-veg',
     servingNorm: 'buffet',
     isPopular: true,
-    packageAssociation: ['₹200 Chicken Biryani Leaf Meal', '₹500 Mutton Biryani Leaf Meal', 'Grand Royal Wedding', 'Complete Wedding Lineup', 'Add-on Leaf Meal']
+    packageAssociation: ['₹200 Chicken Biryani Leaf Meal', '₹300 Mutton Biryani Leaf Meal', 'Grand Royal Wedding', 'Complete Wedding Lineup', 'Add-on Leaf Meal']
   },
   {
     id: 'm-chk-gravy',
@@ -456,7 +456,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietaryNorm: 'pure-veg',
     servingNorm: 'banana-leaf',
     isPopular: true,
-    packageAssociation: ['₹200 Chicken Biryani', '₹500 Mutton Biryani', 'Grand Royal Wedding']
+    packageAssociation: ['₹200 Chicken Biryani', '₹300 Mutton Biryani', 'Grand Royal Wedding']
   },
 
   // Traditional Veg Meals
@@ -718,7 +718,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietaryNorm: 'pure-veg',
     servingNorm: 'banana-leaf',
     isPopular: true,
-    packageAssociation: ['₹200 Chicken Biryani', '₹500 Mutton Biryani', 'Grand Royal Wedding']
+    packageAssociation: ['₹200 Chicken Biryani', '₹300 Mutton Biryani', 'Grand Royal Wedding']
   },
   {
     id: 'm-firni',

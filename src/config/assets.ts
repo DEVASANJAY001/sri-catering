@@ -55,7 +55,7 @@ export const MEDIA_ASSETS: {
       id: 'img-mutton-biryani-pkg',
       type: 'image',
       src: '/assets/images/WhatsApp Image 2026-10-07 at 9.29.06 PM.jpeg',
-      title: 'Authentic Mutton Biryani Menu Package (₹500/-)',
+      title: 'Authentic Mutton Biryani Menu Package (₹300/-)',
       description: 'Banana leaf presentation with Mutton Biryani, Bread Halwa, Onion Raitha, Brinjal Curry & Chicken 65 add-on (+₹50/-). Free ice cream & service for orders over 100 guests.',
       category: 'package',
       tags: ['Mutton Biryani', 'Halal', 'Banana Leaf', 'Non-Veg', 'Special Package'],
